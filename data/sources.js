@@ -43,7 +43,7 @@ const VIDEO_CHANNELS = {
 const REF = {
   serlo:     { name: 'Serlo', desc: 'Gemeinnützige, freie Lernplattform (Mathe, Bio, Chemie …)', url: (q) => `https://de.serlo.org/search?q=${encodeURIComponent(q)}` },
   leifi:     { name: 'LEIFI Physik', desc: 'Physik-Portal der Joachim Herz Stiftung', url: (q) => `https://www.leifiphysik.de/suche?search_api_fulltext=${encodeURIComponent(q)}` },
-  bpb:       { name: 'bpb.de', desc: 'Bundeszentrale für politische Bildung', url: (q) => `https://www.bpb.de/suche/?term=${encodeURIComponent(q)}` },
+  bpb:       { name: 'bpb.de', desc: 'Bundeszentrale für politische Bildung', url: (q) => `https://www.bpb.de/themen/suche/?term=${encodeURIComponent(q)}` },
   lemo:      { name: 'LeMO', desc: 'Lebendiges Museum Online (DHM & Haus der Geschichte)', url: () => 'https://www.dhm.de/lemo/' },
   duden:     { name: 'Duden', desc: 'Rechtschreibung & Grammatik', url: (q) => `https://www.duden.de/suchen/dudenonline/${encodeURIComponent(q)}` },
   bc:        { name: 'British Council LearnEnglish', desc: 'Grammar reference & exercises', url: () => 'https://learnenglish.britishcouncil.org/' },
@@ -73,12 +73,12 @@ export function referenceLinks(topic, subject, query) {
 
 // Für die Quellen-Seite
 export const CURRICULA = [
-  { name: 'KMK – Bildungsstandards', url: 'https://www.kmk.org/themen/qualitaetssicherung-in-schulen/bildungsstandards.html',
+  { name: 'KMK – Bildungsstandards', url: 'https://www.kmk.org/bildungsministerkonferenz/bildungsthemen/bildungsstandards.html',
     desc: 'Länderübergreifende Standards für ESA, MSA und Abitur (Deutsch, Mathe, Fremdsprachen, Naturwissenschaften).' },
-  { name: 'IQB – Institut zur Qualitätsentwicklung im Bildungswesen', url: 'https://www.iqb.hu-berlin.de/',
+  { name: 'IQB – Institut zur Qualitätsentwicklung im Bildungswesen', url: 'https://www.iqb.hu-berlin.de/de/',
     desc: 'Koordiniert die gemeinsamen Abituraufgabenpools und VERA-Vergleichsarbeiten.' },
   { name: 'LehrplanPLUS Bayern', url: 'https://www.lehrplanplus.bayern.de/', desc: 'Lehrpläne aller bayerischen Schularten.' },
-  { name: 'Kernlehrpläne NRW', url: 'https://www.schulentwicklung.nrw.de/lehrplaene/', desc: 'Lehrpläne der Schulformen in Nordrhein-Westfalen.' },
+  { name: 'Kernlehrpläne NRW', url: 'https://lehrplannavigator.nrw.de/', desc: 'Lehrpläne der Schulformen in Nordrhein-Westfalen.' },
   { name: 'Bildungspläne Baden-Württemberg', url: 'https://www.bildungsplaene-bw.de/', desc: 'Bildungspläne 2016 für alle Schularten in BW.' },
   { name: 'Deutscher Bildungsserver', url: 'https://www.bildungsserver.de/', desc: 'Wegweiser des DIPF (Leibniz-Institut) zu Bildungsangeboten aller Länder.' },
 ];

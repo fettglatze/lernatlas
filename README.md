@@ -24,6 +24,7 @@ lernatlas/
 │   ├── exercise.js          Übungs-Engine (choice, number, numbers, text)
 │   ├── render.js            Lernzettel-Blöcke → HTML
 │   └── store.js             Schulform, Bundesland, Fortschritt (localStorage)
+├── tools/linkcheck.py       prüft alle Links in data/ (monatlich: python tools/linkcheck.py)
 ├── tools/videos/            Skripte zum Kuratieren und Prüfen von Videos (Python)
 └── data/
     ├── catalog.js           Alle Fächer und Themen je Schulform

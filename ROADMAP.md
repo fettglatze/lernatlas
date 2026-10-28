@@ -1,6 +1,6 @@
 # Lernatlas – Roadmap
 
-Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · nächster Schritt: Phase 4
+Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4 Schritt 1 abgeschlossen (Link-Checker)
 
 ## Phase 1 – Fundament ✅
 
@@ -46,10 +46,10 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
 
 ## Phase 4 – Prüfungsarchiv vertiefen
 
-- Deep-Links je Land, Fach und Jahr, wo die Länder Aufgaben frei veröffentlichen (Bayern/ISB, Bremen, MV, Sachsen-Anhalt, IQB)
-- Eigene Seiten je Prüfung (z. B. „ZP10 Mathe NRW“) mit Aufbau, Dauer, Hilfsmitteln und Bewertung
-- Eigene Übungsaufgaben im Prüfungsstil, wo keine Originale frei verfügbar sind
-- Link-Checker-Skript, das monatlich tote Links meldet
+1. ✅ **Link-Checker und Linkpflege:** `tools/linkcheck.py` prüft alle festen Links in `data/` (per curl, damit Behördenzertifikate wie im Browser akzeptiert werden), meldet Defekte, Umleitungen und bekannte Bot-Sperren; für einen monatlichen Lauf gedacht. Erster Lauf: 12 Links auf neue Adressen umgestellt (u. a. ISB Bayern, ISQ Berlin, Hamburg, Bremen, KMK, Lehrplannavigator NRW), mebis-Prüfungsarchiv auf die vom Kultusministerium genannte Adresse. bildung-mv.de war nicht erreichbar → zwei Bildungsserver-Wegweiser für MV ergänzt. Stand: 59 Links, 1 nicht erreichbar (bildung-mv.de, begründet behalten).
+2. Deep-Links je Land, Fach und Jahr, wo die Länder Aufgaben frei veröffentlichen (Bayern/ISB, Bremen, MV, Sachsen-Anhalt, IQB)
+3. Eigene Seiten je Prüfung (z. B. „ZP10 Mathe NRW“) mit Aufbau, Dauer, Hilfsmitteln und Bewertung
+4. Eigene Übungsaufgaben im Prüfungsstil, wo keine Originale frei verfügbar sind
 
 ## Phase 5 – Bundesland-Modus
 
