@@ -32,6 +32,7 @@ import werte from './werte.js';
 import musisch from './musisch.js';
 import praxis from './praxis.js';
 import paedagogikPsychologie from './paedagogik-psychologie.js';
+import videos from './videos.js';
 
 export const CONTENT = {
   ...mathe, ...matheZahlen, ...matheAlgebra, ...matheGeometrie, ...matheDaten, ...matheAnalysis, ...matheOberstufe,
@@ -41,3 +42,8 @@ export const CONTENT = {
   ...gesellschaft, ...geschichte, ...politik, ...erdkunde, ...wirtschaft,
   ...franzoesisch, ...spanisch, ...latein, ...informatik, ...werte, ...musisch, ...praxis, ...paedagogikPsychologie,
 };
+
+// Gesichtete Videos (videos.js) an die Themen hängen
+for (const [id, list] of Object.entries(videos)) {
+  if (CONTENT[id]) CONTENT[id].videos = list;
+}

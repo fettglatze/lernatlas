@@ -1,7 +1,7 @@
 // Verlässliche Quellen je Fach.
 // Videos: Wir verlinken gezielte YouTube-Suchen auf etablierten Bildungskanälen
-// (statt ungeprüfter Einzel-Video-IDs). Geprüfte Einzelvideos können pro Thema
-// in content/*.js unter `videos` ergänzt werden – sie werden datensparsam (2-Klick) eingebettet.
+// (statt ungeprüfter Einzel-Video-IDs). Geprüfte Einzelvideos stehen in content/videos.js
+// (erzeugt mit tools/videos/) – sie werden datensparsam (2-Klick) eingebettet.
 
 const yt = (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
 

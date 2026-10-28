@@ -1,6 +1,6 @@
 # Lernatlas – Roadmap
 
-Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · nächster Schritt: Phase 3
+Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · nächster Schritt: Phase 4
 
 ## Phase 1 – Fundament ✅
 
@@ -32,10 +32,17 @@ Reihenfolge nach Prüfungsrelevanz:
 Ziel je Thema: 5–7 Aufgaben, die letzte im Stil von Prüfungsaufgaben (Kennzeichnung „Prüfungsstil“).
 Fachliche Prüfung: Jedes Thema sollte vor dem Livegang von einer Fachlehrkraft gegengelesen werden.
 
-## Phase 3 – Videos kuratieren
+## Phase 3 – Videos kuratieren ✅
 
 - Pro ausgearbeitetem Thema 1–3 gesichtete Einzelvideos (`videos: [{ yt, title, channel }]`)
 - Einbettung über youtube-nocookie erst nach Klick (2-Klick-Lösung) ist schon eingebaut
+
+1. ✅ **Mathe, Deutsch, Englisch:** 136 Videos für 86 von 93 Themen in `data/content/videos.js` (wird in `index.js` an die Themen gehängt). Kanäle: Lehrerschmidt, Mathe by Daniel Jung, MathemaTrick, simpleclub, musstewissen, Mr V Englisch, Duden Learnattack. Jede ID per YouTube-oEmbed geprüft (Video existiert, Kanal stimmt); Auswahl nach Titel, Inhalte nicht vollständig angesehen. Ohne passendes Video bisher: s/ss/ß, Fremdwörter, Materialgestütztes Schreiben, Sprachwandel, Medien, Future, Modal Verbs. Werkzeuge: `tools/videos/`.
+2. ✅ **Naturwissenschaften und Informatik:** 132 Videos für 70 von 74 Themen (Physik 23/23, Chemie 19/19, Biologie 18/21, Informatik 10/11). Zusätzliche Kanäle: planet schule, The Morpheus Tutorials. Ohne passendes Video bisher: Kennzeichen des Lebendigen, Pubertät & Sexualität, Mensch & Umwelt, Künstliche Intelligenz. Gesamtstand: 268 Videos für 156 Themen.
+3. ✅ **Gesellschaftsfächer:** 83 Videos für 47 von 58 Themen (Geschichte 21/23, Erdkunde 13/13, Politik 9/14, Wirtschaft 4/8). Kanäle: MrWissen2go Geschichte (heißt bei YouTube jetzt „MrWissen2go Geschichte | Terra X“), MrWissen2go, simpleclub, planet schule, bpb. Bewusst ausgelassen: datierte Wahl- und Meinungsvideos. Ohne passendes Video bisher: Quellenanalyse, Karikaturen, Wahlen, Parteien, Partizipation, Rechtsstaat, Medien & Demokratie, Verbraucherbildung, Berufsorientierung, Unternehmen, Arbeitsrecht. Gesamtstand: 351 Videos für 203 Themen.
+4. ✅ **Weitere Fremdsprachen und Nebenfächer:** 54 Videos für 33 von 66 Themen (Französisch 6/9, Spanisch 4/6, Latein 7/10, Religion 4/5, Pädagogik/Psychologie 3/7, Ethik 1/5, Kunst 1/4, Sport 2/4, AWT 2/3, Technik 1/3, Hauswirtschaft 2/3, Musik 0/5, Darstellendes Spiel 0/2). Für Musik, DS und die meisten Ethik-Themen bieten die festgelegten Kanäle nichts Passendes.
+
+Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zeigen weiterhin die Suchlinks auf etablierte Kanäle. Offen für später: passende seriöse Kanäle für Musik, Ethik/Philosophie und Darstellendes Spiel finden und mit `tools/videos/` nachtragen; Stichproben der Videos durch Lehrkräfte.
 
 ## Phase 4 – Prüfungsarchiv vertiefen
 

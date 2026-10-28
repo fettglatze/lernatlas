@@ -24,12 +24,14 @@ lernatlas/
 │   ├── exercise.js          Übungs-Engine (choice, number, numbers, text)
 │   ├── render.js            Lernzettel-Blöcke → HTML
 │   └── store.js             Schulform, Bundesland, Fortschritt (localStorage)
+├── tools/videos/            Skripte zum Kuratieren und Prüfen von Videos (Python)
 └── data/
     ├── catalog.js           Alle Fächer und Themen je Schulform
     ├── exams.js             Prüfungsarchiv: bundesweit + 16 Länder
     ├── sources.js           Videokanäle und Nachschlagewerke je Fach
     └── content/             Ausgearbeitete Themen (Lernzettel, Merkzettel, Übungen)
         ├── index.js         führt alle Inhaltsdateien zusammen
+        ├── videos.js        geprüfte YouTube-Videos je Thema (Phase 3)
         ├── _helpers.js      Kurzschreibweisen ch(), num(), nums(), txt(), EX
         ├── mathe-*.js       zahlen, algebra, geometrie, daten, analysis, oberstufe (+ mathe.js)
         ├── deutsch-*.js     sprache, texte, abitur (Epochen, Sprachwandel)
@@ -95,4 +97,4 @@ Eine neue Datei muss in `data/content/index.js` importiert werden. Das Thema gil
 
 ### Automatischer Test
 
-Im Browser auf der laufenden Seite: jede Themenseite öffnen, je Aufgabe zuerst eine falsche Antwort eintragen (muss abgelehnt werden), dann die richtige (muss angenommen werden), bei Texteingaben zusätzlich alle erlaubten Schreibweisen. Aktueller Stand: 291 Themen, 1780 Aufgaben, 0 Fehler. Gerundete Eingaben wie „1,61“ für ln(5) oder „8/3“ werden ebenfalls angenommen.
+Im Browser auf der laufenden Seite: jede Themenseite öffnen, je Aufgabe zuerst eine falsche Antwort eintragen (muss abgelehnt werden), dann die richtige (muss angenommen werden), bei Texteingaben zusätzlich alle erlaubten Schreibweisen. Aktueller Stand: 291 Themen, 1780 Aufgaben, 0 Fehler; 405 Videos für 236 Themen, alle IDs per oEmbed bestätigt. Gerundete Eingaben wie „1,61“ für ln(5) oder „8/3“ werden ebenfalls angenommen.
