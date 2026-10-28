@@ -24,11 +24,14 @@ lernatlas/
 │   ├── exercise.js          Übungs-Engine (choice, number, numbers, text)
 │   ├── render.js            Lernzettel-Blöcke → HTML
 │   └── store.js             Schulform, Bundesland, Fortschritt (localStorage)
+├── tools/exams/deeplinks.py erzeugt data/exam-files.js (direkte Links auf Länder-PDFs)
 ├── tools/linkcheck.py       prüft alle Links in data/ (monatlich: python tools/linkcheck.py)
 ├── tools/videos/            Skripte zum Kuratieren und Prüfen von Videos (Python)
 └── data/
     ├── catalog.js           Alle Fächer und Themen je Schulform
     ├── exams.js             Prüfungsarchiv: bundesweit + 16 Länder
+    ├── exam-files.js        generiert: direkte Prüfungs-PDFs je Land/Fach/Jahr
+    ├── exam-pages.js        Prüfungsseiten: Aufbau, Dauer, Hilfsmittel (amtliche Quellen)
     ├── sources.js           Videokanäle und Nachschlagewerke je Fach
     └── content/             Ausgearbeitete Themen (Lernzettel, Merkzettel, Übungen)
         ├── index.js         führt alle Inhaltsdateien zusammen

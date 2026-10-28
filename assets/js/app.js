@@ -2,6 +2,8 @@
 import { SCHOOLS, GROUPS, SUBJECTS, SUBJECT_BY_ID, TOPIC_BY_ID, ALL_TOPICS } from '../../data/catalog.js';
 import { CONTENT } from '../../data/content/index.js';
 import { LANDS, NATIONAL, LEVELS } from '../../data/exams.js';
+import { EXAM_FILES } from '../../data/exam-files.js';
+import { EXAM_PAGES, EXAM_PAGE_BY_ID } from '../../data/exam-pages.js';
 import { videoLinks, referenceLinks, CURRICULA, LEARNING_SOURCES } from '../../data/sources.js';
 import { store } from './store.js';
 import { search, highlight, escapeHtml } from './search.js';
@@ -235,12 +237,21 @@ function viewTopic(id, params) {
       const land = LANDS.find((l) => l.code === store.land);
       const landLinks = land ? land.links.filter((l) => levels.includes(l.level)) : [];
       const nat = NATIONAL.filter((n) => levels.includes(n.level) && (n.level !== 'abi' || matchesSubject(n.title, s)));
+      const files = EXAM_FILES.filter((g) => g.subject === s.id && levels.includes(g.level));
+      const ownFiles = files.filter((g) => g.land === land?.code);
+      const otherFiles = files.filter((g) => g.land !== land?.code);
+      const pages = EXAM_PAGES.filter((p) => p.subject === s.id && p.levels.some((l) => levels.includes(l)) && (!land || p.land === land.code));
       return `<div class="prose" style="max-width:none">
         ${c?.exam ? `<h2>Prüfungsbezug</h2><p>${c.exam}</p>` : `<h2>Prüfungsbezug</h2><p>Das Thema ist relevant für: ${levels.map((l) => LEVELS[l].name).join(', ')}.</p>`}
+        ${pages.length ? `<h2>So läuft die Prüfung ab</h2><div>${pages.map(examPageRow).join('')}</div>` : ''}
         <h2>Originalaufgaben ${land ? `in ${land.name}` : ''}</h2>
         ${land ? '' : `<p>Wähle dein Bundesland, um die passenden Prüfungsarchive zu sehen: <a href="#/pruefungen">Bundesland wählen →</a></p>`}
         ${landLinks.length ? `<div>${landLinks.map(examRow).join('')}</div>` : land ? `<p class="muted">Für ${land.name} ist uns zu diesem Abschluss kein öffentliches Archiv bekannt.</p>` : ''}
+        ${ownFiles.length ? `<h3>Nach Jahrgang</h3><div>${ownFiles.map((g, i) => fileGroup(g, i === 0)).join('')}</div>` : ''}
         ${nat.length ? `<h3>Bundesweit</h3><div>${nat.map(examRow).join('')}</div>` : ''}
+        ${otherFiles.length ? `<h3>Frei verfügbar aus anderen Ländern</h3>
+          <p class="muted" style="font-size:14px">Andere Länder, gleiches Fach: gut zum Üben, aber Aufbau und Schwerpunkte können von deiner Prüfung abweichen.</p>
+          <div>${otherFiles.map((g) => fileGroup(g, false, true)).join('')}</div>` : ''}
       </div>`;
     },
     quellen: () => `<div class="prose" style="max-width:none">
@@ -287,10 +298,63 @@ function examRow(x) {
   </a>`;
 }
 
+function examPageRow(p, showLand = false) {
+  const landName = LANDS.find((l) => l.code === p.land)?.name;
+  return `<a class="examrow" href="#/pruefung/${p.id}">
+    <span><strong>${p.title}${showLand ? ` <span class="muted">· ${landName}</span>` : ''}</strong><small>${p.exam} · Stand ${p.stand}</small></span>
+    <span class="access access--info">Überblick</span>
+    <span class="arrow">→</span>
+  </a>`;
+}
+
+function viewExamPage(id) {
+  const p = EXAM_PAGE_BY_ID[id];
+  if (!p) return viewNotFound();
+  const land = LANDS.find((l) => l.code === p.land);
+  const s = SUBJECT_BY_ID[p.subject];
+  const files = EXAM_FILES.filter((g) => g.land === p.land && g.subject === p.subject && p.levels.includes(g.level));
+  const links = land.links.filter((l) => p.levels.includes(l.level));
+  const val = (v) => Array.isArray(v) ? `<ul>${v.map((x) => `<li>${x}</li>`).join('')}</ul>` : `<p>${v}</p>`;
+  return pagehead({
+    crumbs: [['Prüfungen', '#/pruefungen'], [land.name, `#/pruefungen?land=${land.code}`], [p.title]],
+    title: p.title,
+    lead: p.lead,
+    meta: metaItem('Land', land.name) + metaItem('Abschluss', p.levels.map((l) => LEVELS[l].short).join(' · ')) + metaItem('Fach', `<a href="#/fach/${s.id}">${s.name}</a>`) + metaItem('Stand', p.stand),
+  }) + `
+  <div class="wrap" style="padding:36px var(--gutter) 72px">
+    <p class="label" style="margin-bottom:6px">${p.exam}</p>
+    <dl class="examfacts">${p.facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${val(v)}</dd></div>`).join('')}</dl>
+    <p class="note"><strong>Hinweis</strong>Zusammengefasst aus der amtlichen Quelle unten. Die Länder passen Details jedes Jahr an – verbindlich sind der aktuelle Erlass und die Informationen eurer Schule.</p>
+    <p>Quelle: <a href="${p.source.url}" target="_blank" rel="noopener">${p.source.label} ↗</a>${(p.more || []).map((m) => ` · <a href="${m.url}" target="_blank" rel="noopener">${m.label} ↗</a>`).join('')}</p>
+
+    ${files.length || links.length ? `<section class="examblock" style="margin-top:40px">
+      <div class="examblock__head"><h2>Zum Üben</h2><span class="muted">Originalaufgaben und Archive aus ${land.name}</span></div>
+      ${files.map((g, i) => fileGroup(g, i === 0)).join('')}
+      ${links.map(examRow).join('')}
+    </section>` : ''}
+    <p class="muted"><a href="#/fach/${s.id}">Alle Themen im Fach ${s.name} →</a> &nbsp;·&nbsp; <a href="#/pruefungen?land=${land.code}">Prüfungsarchiv ${land.name} →</a></p>
+  </div>`;
+}
+
+// Eine Zeile je Fach und Abschluss; aufgeklappt stehen alle Jahrgänge mit direkten Dateilinks.
+function fileGroup(g, open = false, showLand = false) {
+  const years = g.years.map(([y]) => y);
+  const count = g.years.reduce((n, [, f]) => n + f.length, 0);
+  const landName = LANDS.find((l) => l.code === g.land)?.name;
+  return `<details class="filegroup"${open ? ' open' : ''}>
+    <summary><span><strong>${g.name}</strong><small>${showLand ? `${landName} · ` : ''}${LEVELS[g.level].name} · ${Math.min(...years)}–${Math.max(...years)} · ${count} Dateien</small></span>
+      <span class="access access--frei">Frei</span><span class="arrow" aria-hidden="true">+</span></summary>
+    <div class="filegroup__years">${g.years.map(([y, f]) => `<div class="fileyear"><b>${y}</b><span>${f.map(([label, url]) => `<a href="${url}" target="_blank" rel="noopener">${label}</a>`).join('')}</span></div>`).join('')}
+      <p class="muted">Quelle: <a href="${g.page}" target="_blank" rel="noopener">${g.source} ↗</a> · PDF-Dateien des Landes, öffnen in neuem Tab</p></div>
+  </details>`;
+}
+
 function viewExams(params) {
   const level = params.get('level') || '';
   const land = LANDS.find((l) => l.code === (params.get('land') || store.land));
   const lv = (x) => !level || x.level === level;
+  const landFiles = land ? EXAM_FILES.filter((g) => g.land === land.code && lv(g)) : [];
+  const landPages = land ? EXAM_PAGES.filter((p) => p.land === land.code && (!level || p.levels.includes(level))) : [];
 
   return pagehead({
     crumbs: [['Prüfungen']],
@@ -316,8 +380,15 @@ function viewExams(params) {
       <div class="examblock__head"><h2>${land.name}</h2>
         <span class="muted">${['esa', 'msa', 'abi'].map((k) => `<span class="label">${LEVELS[k].short}</span> ${land.names[k]}`).join(' &nbsp;·&nbsp; ')}</span></div>
       ${land.note ? `<p class="note" style="margin:14px 0">${land.note}</p>` : ''}
+      ${landPages.length ? `<h3 class="filehead">Prüfungen im Detail – Aufbau, Dauer, Hilfsmittel</h3>${landPages.map(examPageRow).join('')}<h3 class="filehead">Archive und Aufgaben</h3>` : ''}
       ${land.links.filter(lv).map(examRow).join('') || (land.note ? '' : '<p class="muted" style="padding:14px 4px">Für diesen Abschluss ist uns kein öffentliches Angebot bekannt. Frage deine Lehrkräfte nach Übungsaufgaben aus den Vorjahren.</p>')}
+      ${landFiles.length ? `<h3 class="filehead">Direkt zu den Aufgaben – nach Fach und Jahr</h3>${landFiles.map((g) => fileGroup(g)).join('')}` : ''}
     </section>` : '<p class="empty" style="margin-bottom:40px">Wähle oben dein Bundesland, um die Prüfungsarchive deines Landes zu sehen.</p>'}
+
+    ${land ? '' : `<section class="examblock">
+      <div class="examblock__head"><h2>Prüfungen im Detail</h2><span class="muted">Aufbau, Dauer, Hilfsmittel – nach amtlichen Vorgaben</span></div>
+      ${EXAM_PAGES.filter((p) => !level || p.levels.includes(level)).map((p) => examPageRow(p, true)).join('')}
+    </section>`}
 
     <section class="examblock">
       <div class="examblock__head"><h2>Bundesweit</h2><span class="muted">gilt für alle Länder</span></div>
@@ -391,13 +462,14 @@ function route() {
   else if (a === 'fach') { html = viewSubject(b, params); title = `${SUBJECT_BY_ID[b]?.name || 'Fach'} · Lernatlas`; }
   else if (a === 'thema') { html = viewTopic(b, params); title = `${TOPIC_BY_ID[b]?.title || 'Thema'} · Lernatlas`; }
   else if (a === 'pruefungen') { html = viewExams(params); title = 'Prüfungsarchiv · Lernatlas'; }
+  else if (a === 'pruefung') { html = viewExamPage(b); title = `${EXAM_PAGE_BY_ID[b]?.title || 'Prüfung'} · Lernatlas`; }
   else if (a === 'suche') { html = viewSearch(params); title = 'Suche · Lernatlas'; }
   else if (a === 'quellen') { html = viewSources(); title = 'Quellen · Lernatlas'; }
   else html = viewNotFound();
 
   main.innerHTML = html;
   document.title = title;
-  document.querySelectorAll('[data-nav]').forEach((n) => n.classList.toggle('is-active', n.dataset.nav === a || (a === 'fach' && n.dataset.nav === 'faecher')));
+  document.querySelectorAll('[data-nav]').forEach((n) => n.classList.toggle('is-active', n.dataset.nav === a || (a === 'fach' && n.dataset.nav === 'faecher') || (a === 'pruefung' && n.dataset.nav === 'pruefungen')));
   if (path !== lastPath) window.scrollTo(0, 0);
   lastPath = path;
 

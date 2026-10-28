@@ -1,6 +1,6 @@
 # Lernatlas – Roadmap
 
-Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4 Schritt 1 abgeschlossen (Link-Checker)
+Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4 Schritt 3 begonnen (6 Prüfungsseiten)
 
 ## Phase 1 – Fundament ✅
 
@@ -47,8 +47,9 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
 ## Phase 4 – Prüfungsarchiv vertiefen
 
 1. ✅ **Link-Checker und Linkpflege:** `tools/linkcheck.py` prüft alle festen Links in `data/` (per curl, damit Behördenzertifikate wie im Browser akzeptiert werden), meldet Defekte, Umleitungen und bekannte Bot-Sperren; für einen monatlichen Lauf gedacht. Erster Lauf: 12 Links auf neue Adressen umgestellt (u. a. ISB Bayern, ISQ Berlin, Hamburg, Bremen, KMK, Lehrplannavigator NRW), mebis-Prüfungsarchiv auf die vom Kultusministerium genannte Adresse. bildung-mv.de war nicht erreichbar → zwei Bildungsserver-Wegweiser für MV ergänzt. Stand: 59 Links, 1 nicht erreichbar (bildung-mv.de, begründet behalten).
-2. Deep-Links je Land, Fach und Jahr, wo die Länder Aufgaben frei veröffentlichen (Bayern/ISB, Bremen, MV, Sachsen-Anhalt, IQB)
-3. Eigene Seiten je Prüfung (z. B. „ZP10 Mathe NRW“) mit Aufbau, Dauer, Hilfsmitteln und Bewertung
+2. ✅ **Deep-Links je Land, Fach und Jahr:** `tools/exams/deeplinks.py` liest die Download-Listen von Bremen (Abitur, MSA, BBR), Sachsen-Anhalt (Abitur seit 2023) und ISB Bayern (Abitur, Realschule) und erzeugt `data/exam-files.js`: 839 direkte PDF-Links in 41 Fach-/Abschlussgruppen, alle per Link-Checker erreichbar. Im Prüfungsarchiv erscheinen sie je Land aufklappbar nach Jahrgang; auf Themenseiten zuerst für das eigene Land, darunter als „frei verfügbar aus anderen Ländern“. MV (Seite nicht erreichbar) und IQB (Fachseiten schon verlinkt) bleiben bei den Übersichtslinks.
+3. 🔶 **Prüfungsseiten (erster Satz):** `data/exam-pages.js` + Route `#/pruefung/<id>` mit Aufbau, Dauer, Hilfsmitteln und Bewertung – nur aus amtlichen Quellen, jeweils mit Stand und Quellenlink. Fertig: NRW ZP10 Deutsch/Mathe/Englisch (Standardsicherung-FAQ), Hamburg ESA/MSA Deutsch und Mathe 2027 (Regelungen der Behörde), Bayern Abitur Mathematik ab 2026 (KMS 23.07.2024). Verlinkt im Prüfungsarchiv (Übersicht und je Land) und auf Themenseiten („So läuft die Prüfung ab“).
+   - Offen: weitere Länder und Fächer. Für BW, NI, BE/BB fanden sich nur ältere Erlasse oder widersprüchliche Schulangaben – erst aufnehmen, wenn eine aktuelle amtliche Quelle vorliegt.
 4. Eigene Übungsaufgaben im Prüfungsstil, wo keine Originale frei verfügbar sind
 
 ## Phase 5 – Bundesland-Modus
