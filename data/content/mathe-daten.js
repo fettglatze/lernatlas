@@ -1,0 +1,85 @@
+// Ausgearbeitete Themen: Mathematik – Daten & Zufall (Sek I)
+import { fr, ch, num, EX, ex } from './_helpers.js';
+
+export default {
+  'mathe--diagramme': {
+    summary: 'Statistik macht Daten verständlich: Diagramme zeigen, Kennwerte fassen zusammen. So erkennst du auch, wann eine Grafik in die Irre führt.',
+    goals: ['Passende Diagrammarten wählen', 'Mittelwert, Median, Modalwert und Spannweite bestimmen', 'Kreisdiagramme berechnen', 'Irreführende Darstellungen erkennen'],
+    lernzettel: [
+      { h: 'Diagrammarten' },
+      { tbl: { head: ['Diagramm', 'geeignet für'], rows: [['Säulen-/Balkendiagramm', 'Vergleich von Kategorien'], ['Kreisdiagramm', 'Anteile an einem Ganzen'], ['Liniendiagramm', 'Entwicklung über die Zeit'], ['Boxplot', 'Verteilung und Streuung von Daten']] } },
+      { h: 'Kennwerte' },
+      { tbl: { head: ['Kennwert', 'Bestimmung'], rows: [['arithmetisches Mittel', 'Summe aller Werte : Anzahl der Werte'], ['Median (Zentralwert)', 'mittlerer Wert der geordneten Liste; bei gerader Anzahl Mittel der beiden mittleren'], ['Modalwert', 'häufigster Wert'], ['Spannweite', 'größter Wert − kleinster Wert']] } },
+      { ex: { t: 'Beispiel: 3, 5, 5, 6, 8, 9, 13', lines: ['Mittelwert: 49 : 7 = 7 · Median: 6 · Modalwert: 5 · Spannweite: 13 − 3 = 10'] } },
+      { note: 'Der Median ist robust gegen Ausreißer: Ersetzt man 13 durch 100, bleibt der Median 6, der Mittelwert steigt auf über 19.', kind: 'Tipp' },
+      { h: 'Kreisdiagramm' },
+      { p: 'Der Vollkreis hat 360° = 100 %. Also entspricht 1 % genau 3,6°. 25 % ⇒ 90°, 10 % ⇒ 36°.' },
+      { h: 'Vorsicht, Manipulation' },
+      { ul: ['abgeschnittene y-Achse (beginnt nicht bei 0) übertreibt Unterschiede', 'ungleiche Abstände auf den Achsen', '3D-Effekte verzerren Größen'] },
+    ],
+    merkzettel: [['Mittelwert', 'Summe : Anzahl'], ['Median', 'Mitte der geordneten Liste'], ['Modalwert', 'häufigster Wert'], ['Spannweite', 'Maximum − Minimum'], ['Kreisdiagramm', '1 % = 3,6°'], ['Achsen prüfen', 'Beginnt die y-Achse bei 0?']],
+    exercises: [
+      num('Bestimme den Mittelwert: 3, 5, 5, 6, 8, 9, 13', 7, '49 : 7 = 7'),
+      num('Bestimme den Median: 3, 5, 5, 6, 8, 9, 13', 6, 'Der 4. von 7 geordneten Werten ist 6.'),
+      num('Bestimme die Spannweite: 3, 5, 5, 6, 8, 9, 13', 10, '13 − 3 = 10'),
+      num('Bestimme den Median: 2, 4, 7, 9', 5.5, '(4 + 7) : 2 = 5,5'),
+      num('Ein Anteil von 25 % soll im Kreisdiagramm dargestellt werden. Wie groß ist der Mittelpunktswinkel?', 90, '25 · 3,6° = 90°', { unit: '°' }),
+      num('In einer Mathearbeit gab es die Noten 2, 3, 3, 1, 4, 2, 3. Berechne den Notendurchschnitt (zwei Nachkommastellen).', 2.57, '18 : 7 ≈ 2,57', ex({ tol: 0.006 })),
+      ch('Ein Säulendiagramm zeigt Umsätze von 98 Mio. € und 102 Mio. €. Die zweite Säule ist doppelt so hoch wie die erste. Woran liegt das wahrscheinlich?', ['Der Umsatz hat sich verdoppelt.', 'Die y-Achse beginnt nicht bei 0.', 'Die Säulen sind falsch beschriftet.', 'Es ist ein Kreisdiagramm.'], 1, '102 ist nur etwa 4 % mehr als 98 – eine abgeschnittene Achse übertreibt den Unterschied.', EX),
+    ],
+    exam: 'Daten und Diagramme sind Teil jeder ESA- und MSA-Prüfung: Werte ablesen, Kennwerte berechnen und Darstellungen kritisch beurteilen.',
+  },
+
+  'mathe--wahrscheinlichkeit': {
+    summary: 'Wie wahrscheinlich ist eine Sechs, ein Gewinn oder zweimal Kopf? Mit Laplace-Regel und Baumdiagramm berechnest du Chancen sicher.',
+    goals: ['Wahrscheinlichkeiten als Bruch, Dezimalzahl und Prozent angeben', 'Die Laplace-Regel anwenden', 'Baumdiagramme mit Pfadregeln auswerten', 'Mit dem Gegenereignis rechnen'],
+    lernzettel: [
+      { h: 'Grundbegriffe' },
+      { p: 'Ein <strong>Zufallsexperiment</strong> hat mehrere mögliche <strong>Ergebnisse</strong>. Ein <strong>Ereignis</strong> fasst Ergebnisse zusammen (z. B. „gerade Zahl“ beim Würfeln = {2, 4, 6}). Wahrscheinlichkeiten liegen zwischen 0 (unmöglich) und 1 (sicher).' },
+      { h: 'Laplace-Regel' },
+      { f: `P(E) = ${fr('Anzahl günstige Ergebnisse', 'Anzahl mögliche Ergebnisse')}`, label: 'bei gleich wahrscheinlichen Ergebnissen' },
+      { ex: { t: 'Beispiel: Würfel', lines: [`P(6) = ${fr(1, 6)} ≈ 16,7 % · P(gerade) = ${fr(3, 6)} = ${fr(1, 2)} = 50 %`] } },
+      { h: 'Gegenereignis' },
+      { p: `P(nicht E) = 1 − P(E). Besonders praktisch bei „mindestens einmal“: P(mindestens eine 6 bei zwei Würfen) = 1 − P(keine 6) = 1 − (${fr(5, 6)})² = ${fr(11, 36)}.` },
+      { h: 'Mehrstufige Experimente: Baumdiagramm' },
+      { ul: ['<strong>Pfadmultiplikationsregel:</strong> Wahrscheinlichkeiten entlang eines Pfades multiplizieren.', '<strong>Pfadadditionsregel:</strong> Gehören mehrere Pfade zum Ereignis, ihre Wahrscheinlichkeiten addieren.'] },
+      { ex: { t: 'Urne mit 3 roten und 2 blauen Kugeln, zweimal ziehen ohne Zurücklegen', lines: [`P(rot, rot) = ${fr(3, 5)} · ${fr(2, 4)} = ${fr(6, 20)} = 0,3`] } },
+      { note: 'Ohne Zurücklegen ändern sich die Wahrscheinlichkeiten auf der zweiten Stufe – es ist eine Kugel weniger in der Urne!', kind: 'Achtung' },
+      { p: '<strong>Relative Häufigkeit:</strong> Bei sehr vielen Versuchen nähert sich die relative Häufigkeit der Wahrscheinlichkeit an (Gesetz der großen Zahlen).' },
+    ],
+    merkzettel: [['Laplace', 'günstige : mögliche'], ['Bereich', '0 ≤ P ≤ 1'], ['Gegenereignis', 'P(nicht E) = 1 − P(E)'], ['Pfadmultiplikation', 'entlang eines Pfades malnehmen'], ['Pfadaddition', 'mehrere Pfade addieren'], ['Ohne Zurücklegen', 'Nenner wird kleiner']],
+    exercises: [
+      num('Wie groß ist die Wahrscheinlichkeit, mit einem Würfel eine 6 zu werfen? (Bruch oder Dezimalzahl)', 1 / 6, '1 günstiges von 6 möglichen Ergebnissen.', { display: '1/6 ≈ 0,167' }),
+      num('Eine Urne enthält 3 rote und 7 blaue Kugeln. Wie groß ist P(rot)?', 0.3, '3 : 10 = 0,3', { display: '3/10 = 0,3' }),
+      num('Eine Münze wird zweimal geworfen. Wie groß ist P(zweimal Kopf)?', 0.25, '½ · ½ = ¼ = 0,25', { display: '1/4 = 0,25' }),
+      num('Wie groß ist die Wahrscheinlichkeit, bei einem Wurf KEINE 6 zu würfeln?', 5 / 6, '1 − 1/6 = 5/6', { display: '5/6 ≈ 0,833' }),
+      num('Aus einer Urne mit 3 roten und 2 blauen Kugeln werden zwei ohne Zurücklegen gezogen. P(beide rot)?', 0.3, '3/5 · 2/4 = 6/20 = 0,3', { display: '3/10 = 0,3' }),
+      ch('Was besagt das Gesetz der großen Zahlen?', ['Nach fünf Nieten kommt sicher ein Gewinn.', 'Bei vielen Versuchen nähert sich die relative Häufigkeit der Wahrscheinlichkeit.', 'Große Zahlen sind wahrscheinlicher.', 'Jedes Ergebnis kommt gleich oft vor.'], 1, 'Der Zufall hat kein Gedächtnis – aber auf lange Sicht stabilisieren sich die Häufigkeiten.'),
+      num('Ein Glücksrad hat 4 gleich große Felder, eines davon ist „Gewinn“. Es wird zweimal gedreht. Wie groß ist die Wahrscheinlichkeit für mindestens einen Gewinn?', 7 / 16, 'Gegenereignis: zweimal kein Gewinn = (3/4)² = 9/16 ⇒ 1 − 9/16 = 7/16 = 0,4375', ex({ display: '7/16 = 0,4375' })),
+    ],
+    exam: 'Wahrscheinlichkeitsrechnung ist fester Prüfungsbestandteil im ESA und MSA – fast immer mit Baumdiagramm, oft mit Glücksrad, Urne oder Würfelspiel.',
+  },
+
+  'mathe--kombinatorik': {
+    summary: 'Wie viele PINs, Outfits oder Siegerpodeste gibt es? Kombinatorik zählt Möglichkeiten geschickt, ohne alle aufzuschreiben.',
+    goals: ['Das Zählprinzip anwenden', 'Anordnungen mit der Fakultät berechnen', 'Auswahlen mit und ohne Reihenfolge unterscheiden', 'Kombinatorik in Wahrscheinlichkeitsaufgaben nutzen'],
+    lernzettel: [
+      { h: 'Zählprinzip (Produktregel)' },
+      { p: 'Besteht eine Auswahl aus mehreren Stufen mit n₁, n₂, … Möglichkeiten, gibt es insgesamt n₁ · n₂ · … Möglichkeiten. 3 T-Shirts und 4 Hosen ergeben 3 · 4 = 12 Outfits.' },
+      { h: 'Typische Fälle' },
+      { tbl: { head: ['Situation', 'Formel', 'Beispiel'], rows: [['alle n Objekte anordnen', 'n! = n · (n−1) · … · 1', '5 Personen in einer Reihe: 5! = 120'], ['k aus n, mit Wiederholung, Reihenfolge wichtig', 'nᵏ', '4-stellige PIN: 10⁴ = 10 000'], ['k aus n, ohne Wiederholung, Reihenfolge wichtig', 'n · (n−1) · … (k Faktoren)', 'Podium aus 8 Läufern: 8 · 7 · 6 = 336'], ['k aus n, Reihenfolge egal', `${fr('n · (n−1) · … (k Faktoren)', 'k!')}`, '2 von 6 Eissorten: 6 · 5 / 2 = 15']] } },
+      { note: 'Entscheidende Fragen: Darf sich etwas wiederholen? Spielt die Reihenfolge eine Rolle?', kind: 'Tipp' },
+      { p: '„Reihenfolge egal“ heißt: Die Auswahl {Vanille, Schoko} ist dieselbe wie {Schoko, Vanille}. Deshalb teilt man durch die Anzahl der Anordnungen k!.' },
+    ],
+    merkzettel: [['Zählprinzip', 'Möglichkeiten je Stufe multiplizieren'], ['Fakultät', 'n! = n · (n−1) · … · 1'], ['Mit Wiederholung', 'nᵏ'], ['Ohne Wiederholung', 'n · (n−1) · …'], ['Reihenfolge egal', 'durch k! teilen'], ['0!', '= 1']],
+    exercises: [
+      num('Du hast 3 T-Shirts und 4 Hosen. Wie viele verschiedene Outfits kannst du zusammenstellen?', 12, '3 · 4 = 12'),
+      num('Wie viele vierstellige PINs aus den Ziffern 0–9 gibt es?', 10000, '10 · 10 · 10 · 10 = 10 000'),
+      num('Auf wie viele Arten können sich 5 Personen in eine Reihe stellen?', 120, '5! = 5 · 4 · 3 · 2 · 1 = 120'),
+      num('8 Läufer starten. Wie viele Möglichkeiten gibt es für die Plätze 1, 2 und 3?', 336, '8 · 7 · 6 = 336'),
+      num('Berechne 4!', 24, '4 · 3 · 2 · 1 = 24'),
+      num('Eine Eisdiele hat 6 Sorten. Du nimmst 2 verschiedene Kugeln in einem Becher (Reihenfolge egal). Wie viele Möglichkeiten gibt es?', 15, '6 · 5 = 30 geordnete Paare, jede Auswahl doppelt gezählt ⇒ 30 : 2 = 15', EX),
+    ],
+    exam: 'Kombinatorik erscheint im MSA meist als Teil einer Wahrscheinlichkeitsaufgabe (Zahlenschloss, Passwort, Auslosung).',
+  },
+};

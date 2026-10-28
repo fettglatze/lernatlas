@@ -1,0 +1,98 @@
+# Lernatlas
+
+All-in-One-Lernseite für Hauptschule, Realschule und Gymnasium: Themensuche, Lernzettel, Merkzettel, Videos, Übungen mit Lösungskontrolle und ein Archiv offizieller Prüfungsquellen aller 16 Bundesländer.
+
+## Starten
+
+Die Seite ist rein statisch (HTML, CSS, JavaScript-Module) und braucht keinen Build-Schritt. Wegen der ES-Module muss sie über einen lokalen Server laufen, nicht per Doppelklick:
+
+```bash
+python -m http.server 8090 --directory lernatlas
+```
+
+Dann http://localhost:8090 öffnen.
+
+## Aufbau
+
+```
+lernatlas/
+├── index.html               Grundgerüst, Kopfzeile, Suchdialog
+├── assets/css/main.css      Design-System (Tokens, Hell/Dunkel, Druckansicht)
+├── assets/js/
+│   ├── app.js               Router (#/…), alle Ansichten, globale Events
+│   ├── search.js            Suche (umlaut- und tippfehlertolerant)
+│   ├── exercise.js          Übungs-Engine (choice, number, numbers, text)
+│   ├── render.js            Lernzettel-Blöcke → HTML
+│   └── store.js             Schulform, Bundesland, Fortschritt (localStorage)
+└── data/
+    ├── catalog.js           Alle Fächer und Themen je Schulform
+    ├── exams.js             Prüfungsarchiv: bundesweit + 16 Länder
+    ├── sources.js           Videokanäle und Nachschlagewerke je Fach
+    └── content/             Ausgearbeitete Themen (Lernzettel, Merkzettel, Übungen)
+        ├── index.js         führt alle Inhaltsdateien zusammen
+        ├── _helpers.js      Kurzschreibweisen ch(), num(), nums(), txt(), EX
+        ├── mathe-*.js       zahlen, algebra, geometrie, daten, analysis, oberstufe (+ mathe.js)
+        ├── deutsch-*.js     sprache, texte, abitur (Epochen, Sprachwandel)
+        ├── englisch-*.js    grammar, skills, abitur (+ sprachen.js aus Phase 1)
+        ├── physik.js, chemie.js, biologie.js   Sek I (+ naturwissenschaften.js aus Phase 1)
+        ├── physik-, chemie-, biologie-oberstufe.js   Oberstufe
+        ├── geschichte.js, politik.js, erdkunde.js, wirtschaft.js   (+ gesellschaft.js aus Phase 1)
+        ├── franzoesisch.js, spanisch.js, latein.js   weitere Fremdsprachen
+        └── informatik.js, werte.js, musisch.js, praxis.js, paedagogik-psychologie.js   Nebenfächer
+```
+
+## Routen
+
+| Route | Inhalt |
+|---|---|
+| `#/` | Start mit Suche, Fächerregister, Prüfungen |
+| `#/faecher` | Alle Fächer nach Fachgruppen |
+| `#/fach/<id>` | Themen eines Fachs nach Bereichen |
+| `#/thema/<fach>--<slug>?tab=…` | Themenseite (Tabs: lernzettel, merkzettel, videos, uebungen, pruefung, quellen) |
+| `#/pruefungen?level=esa\|msa\|abi\|vera` | Prüfungsarchiv |
+| `#/suche?q=…` | Suchergebnisse |
+| `#/quellen` | Quellen & Methodik |
+
+## Neues Thema ausarbeiten
+
+1. Das Thema muss in `data/catalog.js` stehen (ID = `fach--slug`).
+2. In der passenden Datei unter `data/content/` einen Eintrag mit dieser ID anlegen:
+
+```js
+'fach--slug': {
+  summary: 'Ein bis zwei Sätze',
+  goals: ['Lernziel 1', 'Lernziel 2'],
+  lernzettel: [ { h: 'Überschrift' }, { p: 'Text' }, { f: 'a² + b² = c²', label: 'Formel' },
+                { ex: { t: 'Beispiel', lines: ['…'] } }, { tbl: { head: [], rows: [[]] } },
+                { note: 'Text', kind: 'Tipp' }, { ul: ['…'] } ],
+  merkzettel: [ ['Begriff', 'Erklärung'] ],
+  exercises: [
+    { type: 'choice', q: 'Frage', options: ['A', 'B'], answer: 0, why: 'Erklärung' },
+    { type: 'number', q: 'Frage', answer: 4.8, unit: 'm', why: '…' },
+    { type: 'numbers', q: 'Löse …', answers: [2, -4], why: '…' },
+    { type: 'text', q: 'Frage', accept: ['antwort', 'variante'], why: '…' },
+  ],
+  exam: 'Prüfungsbezug',
+  sources: [ { label: 'Titel', url: 'https://…' } ],     // optional
+  videos: [ { yt: 'VIDEO_ID', title: '…', channel: '…' } ], // optional, nur geprüfte Videos
+}
+```
+
+Eine neue Datei muss in `data/content/index.js` importiert werden. Das Thema gilt danach automatisch als „Ausgearbeitet“ und wird auf der Startseite im Fachzähler mitgezählt.
+
+### Optionen für Aufgaben
+
+| Option | Typ | Wirkung |
+|---|---|---|
+| `exam: true` (oder `EX`) | alle | Kennzeichnung „Prüfungsstil“ |
+| `tol: 0.06` | number, numbers | erlaubte Abweichung (Standard: 0,1 %, mindestens 0,005; ganzzahlige Lösungen wie Jahreszahlen müssen exakt stimmen) |
+| `ordered: true`, `labels: ['x', 'y']` | numbers | Reihenfolge zählt, eigene Feldnamen |
+| `display: '1/6'` | number, numbers | so wird die Lösung angezeigt |
+| `unit`, `unitBefore` | number | Einheit hinter oder vor dem Feld |
+| `loose: true` | text | ignoriert Leerzeichen, `·`/`*`, ² = ^2 (für Terme) |
+| `caseSensitive: true` | text | Groß- und Kleinschreibung zählt |
+| `placeholder` | text | Platzhalter im Eingabefeld |
+
+### Automatischer Test
+
+Im Browser auf der laufenden Seite: jede Themenseite öffnen, je Aufgabe zuerst eine falsche Antwort eintragen (muss abgelehnt werden), dann die richtige (muss angenommen werden), bei Texteingaben zusätzlich alle erlaubten Schreibweisen. Aktueller Stand: 291 Themen, 1780 Aufgaben, 0 Fehler. Gerundete Eingaben wie „1,61“ für ln(5) oder „8/3“ werden ebenfalls angenommen.

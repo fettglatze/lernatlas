@@ -1,0 +1,105 @@
+// Ausgearbeitete Themen: Geschichte & Politik
+
+export default {
+  'geschichte--weimarer-republik': {
+    summary: 'Die Weimarer Republik (1918–1933) war die erste parlamentarische Demokratie Deutschlands. Ihr Scheitern ist zentral, um den Aufstieg des Nationalsozialismus zu verstehen.',
+    goals: ['Die Phasen der Republik zeitlich einordnen', 'Stärken und Schwächen der Verfassung erklären', 'Belastungen und Krisen benennen', 'Ursachen des Scheiterns multiperspektivisch beurteilen'],
+    lernzettel: [
+      { h: 'Zeitleiste' },
+      { tbl: { head: ['Datum', 'Ereignis'], rows: [
+        ['9. Nov. 1918', 'Novemberrevolution: Philipp Scheidemann (SPD) ruft die Republik aus, Kaiser Wilhelm II. dankt ab'],
+        ['11. Nov. 1918', 'Waffenstillstand – Ende des Ersten Weltkriegs'],
+        ['28. Juni 1919', 'Versailler Vertrag (Gebietsverluste, Reparationen, Kriegsschuldartikel 231)'],
+        ['11. Aug. 1919', 'Weimarer Reichsverfassung tritt in Kraft'],
+        ['1920', 'Kapp-Putsch von rechts – scheitert am Generalstreik'],
+        ['1923', 'Krisenjahr: Ruhrbesetzung, Hyperinflation, Hitler-Putsch (8./9. Nov.)'],
+        ['1924–1929', '„Goldene Zwanziger“: Rentenmark, Dawes-Plan, Locarno-Verträge, Völkerbund (1926)'],
+        ['Okt. 1929', 'Börsencrash in New York – Weltwirtschaftskrise, Massenarbeitslosigkeit'],
+        ['1930–1933', 'Präsidialkabinette (Brüning, Papen, Schleicher) regieren mit Notverordnungen'],
+        ['30. Jan. 1933', 'Reichspräsident Hindenburg ernennt Adolf Hitler zum Reichskanzler'],
+      ] } },
+      { h: 'Die Verfassung' },
+      { p: 'Die Verfassung brachte das allgemeine, gleiche Wahlrecht für Männer <strong>und Frauen</strong> ab 20 Jahren, Grundrechte und Volksentscheide. Sie hatte aber Konstruktionsschwächen:' },
+      { ul: [
+        '<strong>Starker Reichspräsident</strong> („Ersatzkaiser“): direkt für 7 Jahre gewählt, ernennt und entlässt den Kanzler (Art. 53), kann den Reichstag auflösen (Art. 25).',
+        '<strong>Artikel 48</strong>: Notverordnungsrecht – der Präsident konnte am Parlament vorbei regieren und Grundrechte außer Kraft setzen.',
+        '<strong>Reines Verhältniswahlrecht ohne Sperrklausel</strong>: viele Splitterparteien, instabile Koalitionen.',
+        'Grundrechte waren nicht vor Änderung geschützt; die Verfassung kannte keine „wehrhafte Demokratie“.',
+      ] },
+      { note: 'Das Grundgesetz von 1949 zieht direkte Lehren aus Weimar: schwacher Bundespräsident, konstruktives Misstrauensvotum (Art. 67), Fünf-Prozent-Hürde, Ewigkeitsklausel (Art. 79 Abs. 3).', kind: 'Tipp' },
+      { h: 'Warum scheiterte die Republik?' },
+      { ul: [
+        '<strong>Politisch:</strong> Feinde von links (KPD) und rechts (DNVP, NSDAP); antidemokratische Eliten in Militär, Justiz und Verwaltung; „Dolchstoßlegende“.',
+        '<strong>Wirtschaftlich:</strong> Reparationen, Inflation 1923 (Verlust der Ersparnisse), Weltwirtschaftskrise mit ca. 6 Millionen Arbeitslosen (1932).',
+        '<strong>Verfassung:</strong> Art. 48 ermöglichte ab 1930 die Ausschaltung des Parlaments.',
+        '<strong>Gesellschaftlich:</strong> „Republik ohne Republikaner“ – viele Menschen trauerten dem Kaiserreich nach, Versailles wurde als Demütigung empfunden.',
+      ] },
+    ],
+    merkzettel: [
+      ['9. Nov. 1918', 'Ausrufung der Republik (Scheidemann)'],
+      ['1919', 'Versailler Vertrag, Weimarer Verfassung, Frauenwahlrecht'],
+      ['1923', 'Krisenjahr: Hyperinflation, Ruhrbesetzung, Hitler-Putsch'],
+      ['1924–1929', 'Stabilisierung, Stresemann, Dawes-Plan, Locarno'],
+      ['1929', 'Weltwirtschaftskrise'],
+      ['Art. 48', 'Notverordnungen des Reichspräsidenten'],
+      ['30. Jan. 1933', 'Hitler wird Reichskanzler'],
+      ['Schlagwort', '„Republik ohne Republikaner“'],
+    ],
+    exercises: [
+      { type: 'number', q: 'In welchem Jahr erreichte die Inflation ihren Höhepunkt?', answer: 1923, tol: 0, why: '1923 – im November kostete ein Brot zeitweise über 200 Milliarden Mark.' },
+      { type: 'choice', q: 'Wer rief am 9. November 1918 vom Reichstagsgebäude die Republik aus?', options: ['Friedrich Ebert', 'Philipp Scheidemann', 'Paul von Hindenburg', 'Gustav Stresemann'], answer: 1, why: 'Philipp Scheidemann (SPD). Kurz darauf rief Karl Liebknecht die „freie sozialistische Republik“ aus.' },
+      { type: 'choice', q: 'Welcher Artikel der Weimarer Verfassung erlaubte dem Reichspräsidenten Notverordnungen?', options: ['Artikel 1', 'Artikel 25', 'Artikel 48', 'Artikel 231'], answer: 2, why: 'Artikel 48. (Art. 231 ist der Kriegsschuldartikel des Versailler Vertrags.)' },
+      { type: 'choice', q: 'Welcher Politiker steht für die Verständigungspolitik (Locarno, Völkerbund)?', options: ['Gustav Stresemann', 'Heinrich Brüning', 'Franz von Papen', 'Wolfgang Kapp'], answer: 0, why: 'Außenminister Gustav Stresemann erhielt dafür 1926 den Friedensnobelpreis.' },
+      { type: 'choice', q: 'Warum gab es im Reichstag so viele Parteien?', options: ['Wegen der Fünf-Prozent-Hürde', 'Wegen des reinen Verhältniswahlrechts ohne Sperrklausel', 'Weil nur Männer wählen durften', 'Weil der Kaiser die Parteien bestimmte'], answer: 1, why: 'Ohne Sperrklausel zogen auch sehr kleine Parteien ein – stabile Mehrheiten waren schwer.' },
+      { type: 'number', q: 'In welchem Jahr wurde Hitler zum Reichskanzler ernannt?', answer: 1933, tol: 0, why: 'Am 30. Januar 1933 durch Reichspräsident Hindenburg.' },
+    ],
+    sources: [
+      { label: 'LeMO: Weimarer Republik (Deutsches Historisches Museum)', url: 'https://www.dhm.de/lemo/kapitel/weimarer-republik' },
+    ],
+    exam: 'Weimar ist Pflichtthema in Klasse 9/10 und in fast allen Ländern Abiturschwerpunkt (oft im Längsschnitt „Demokratie in Deutschland“). Typisch: Quellen- oder Karikaturanalyse plus Erörterung der Gründe des Scheiterns.',
+  },
+
+  'politik--gewaltenteilung': {
+    summary: 'Gewaltenteilung verhindert Machtmissbrauch: Gesetze machen, ausführen und darüber richten sollen verschiedene Organe übernehmen, die sich gegenseitig kontrollieren.',
+    goals: ['Die drei Gewalten mit ihren Organen benennen', 'Horizontale und vertikale Gewaltenteilung unterscheiden', 'Die Gewaltenverschränkung im parlamentarischen System erklären', 'Die Bedeutung für die Demokratie begründen'],
+    lernzettel: [
+      { h: 'Die drei Gewalten' },
+      { tbl: { head: ['Gewalt', 'Aufgabe', 'Organe auf Bundesebene'], rows: [
+        ['Legislative', 'Gesetze beschließen', 'Bundestag (Bundesrat wirkt mit)'],
+        ['Exekutive', 'Gesetze ausführen', 'Bundesregierung, Verwaltung, Polizei, Bundeswehr'],
+        ['Judikative', 'Recht sprechen', 'Gerichte, Bundesverfassungsgericht'],
+      ] } },
+      { p: 'Grundgedanke: Wer alle Macht vereint, kann sie missbrauchen. Die Idee geht auf John Locke und vor allem auf <strong>Montesquieu</strong> zurück („Vom Geist der Gesetze“, 1748). Im Grundgesetz ist sie in <strong>Art. 20 Abs. 2</strong> verankert und durch die Ewigkeitsklausel (Art. 79 Abs. 3) geschützt.' },
+      { h: 'Weitere Formen' },
+      { ul: [
+        '<strong>Vertikale Gewaltenteilung</strong> (Föderalismus): Macht verteilt auf Bund, Länder und Kommunen.',
+        '<strong>Zeitliche Gewaltenteilung</strong>: Macht auf Zeit – der Bundestag wird alle vier Jahre gewählt.',
+        '<strong>Vierte Gewalt</strong>: freie Medien kontrollieren die Politik (kein Verfassungsorgan, aber durch die Pressefreiheit, Art. 5 GG, geschützt).',
+      ] },
+      { h: 'Gewaltenverschränkung' },
+      { p: 'Im parlamentarischen Regierungssystem sind Legislative und Exekutive eng verbunden: Der Bundestag wählt den Bundeskanzler (Art. 63 GG), viele Minister sind zugleich Abgeordnete. Die eigentliche Kontrolle der Regierung übernimmt daher vor allem die <strong>Opposition</strong> – z. B. durch Anfragen, Untersuchungsausschüsse und Klagen vor dem Bundesverfassungsgericht.' },
+      { note: 'Das Bundesverfassungsgericht in Karlsruhe kann Gesetze für verfassungswidrig erklären – es kontrolliert damit sogar die Legislative.', kind: 'Tipp' },
+    ],
+    merkzettel: [
+      ['Legislative', 'gesetzgebend – Bundestag, Bundesrat'],
+      ['Exekutive', 'ausführend – Regierung, Verwaltung, Polizei'],
+      ['Judikative', 'rechtsprechend – Gerichte, BVerfG'],
+      ['Ursprung', 'Montesquieu, 1748'],
+      ['Grundgesetz', 'Art. 20 Abs. 2'],
+      ['Vertikal', 'Bund – Länder – Kommunen'],
+      ['Verschränkung', 'Bundestag wählt Kanzler, Opposition kontrolliert'],
+    ],
+    exercises: [
+      { type: 'choice', q: 'Zu welcher Gewalt gehört der Bundestag?', options: ['Legislative', 'Exekutive', 'Judikative'], answer: 0, why: 'Der Bundestag beschließt die Gesetze.' },
+      { type: 'choice', q: 'Zu welcher Gewalt gehört die Polizei?', options: ['Legislative', 'Exekutive', 'Judikative'], answer: 1, why: 'Die Polizei setzt Gesetze durch – sie ist Teil der ausführenden Gewalt.' },
+      { type: 'choice', q: 'Zu welcher Gewalt gehört das Bundesverfassungsgericht?', options: ['Legislative', 'Exekutive', 'Judikative'], answer: 2, why: 'Es ist ein Gericht und damit Teil der Rechtsprechung.' },
+      { type: 'choice', q: 'Wer hat die Lehre von der Gewaltenteilung maßgeblich geprägt?', options: ['Karl Marx', 'Montesquieu', 'Otto von Bismarck', 'Immanuel Kant'], answer: 1, why: 'Charles de Montesquieu, „Vom Geist der Gesetze“ (1748).' },
+      { type: 'choice', q: 'Was meint „vertikale Gewaltenteilung“?', options: ['Die Trennung von Parlament und Regierung', 'Die Aufteilung der Macht auf Bund, Länder und Kommunen', 'Die Begrenzung der Amtszeit', 'Die Kontrolle durch die Medien'], answer: 1, why: 'Vertikal = verschiedene staatliche Ebenen (Föderalismus).' },
+      { type: 'choice', q: 'Wer wählt den Bundeskanzler bzw. die Bundeskanzlerin?', options: ['das Volk direkt', 'der Bundesrat', 'der Bundestag', 'der Bundespräsident'], answer: 2, why: 'Der Bundestag wählt auf Vorschlag des Bundespräsidenten (Art. 63 GG).' },
+    ],
+    sources: [
+      { label: 'Grundgesetz Art. 20 (gesetze-im-internet.de, Bundesministerium der Justiz)', url: 'https://www.gesetze-im-internet.de/gg/art_20.html' },
+    ],
+    exam: 'Gewaltenteilung ist Kernthema in Politik/Sozialkunde ab Klasse 8 und Grundlage für Abituraufgaben zum politischen System (Verfassungsorgane, Gesetzgebung, Rolle des BVerfG).',
+  },
+};

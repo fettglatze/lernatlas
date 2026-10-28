@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lernatlas – Lernen bis zum Abschluss</title>
+  <meta name="description" content="Themen, Lernzettel, Merkzettel, Übungen mit Lösungskontrolle und offizielle Prüfungsquellen für Hauptschule, Realschule und Gymnasium.">
+  <meta name="color-scheme" content="light dark">
+  <!-- TODO vor Livegang: Schriften lokal hosten (DSGVO, siehe ROADMAP.md) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231b1a17'/%3E%3Crect x='6' y='6' width='9' height='20' fill='%23e2552b'/%3E%3Crect x='17' y='6' width='9' height='9' fill='%23f3efe6'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt springen</a>
+
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="#/" aria-label="Lernatlas Startseite">
+        <span class="brand__mark" aria-hidden="true"><i></i><i></i></span>
+        <span class="brand__name">Lernatlas</span>
+      </a>
+      <nav class="mainnav" aria-label="Hauptnavigation">
+        <a href="#/faecher" data-nav="faecher">Fächer</a>
+        <a href="#/pruefungen" data-nav="pruefungen">Prüfungen</a>
+        <a href="#/quellen" data-nav="quellen">Quellen</a>
+      </nav>
+      <div class="topbar__tools">
+        <button class="searchtrigger" type="button" data-action="open-search" aria-label="Suche öffnen">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+          <span>Thema suchen</span>
+          <kbd>/</kbd>
+        </button>
+        <label class="schoolpick">
+          <span class="visually-hidden">Schulform</span>
+          <select data-action="school" aria-label="Schulform wählen">
+            <option value="">Alle Schulformen</option>
+            <option value="hs">Hauptschule</option>
+            <option value="rs">Realschule</option>
+            <option value="gym">Gymnasium</option>
+          </select>
+        </label>
+        <button class="iconbtn" type="button" data-action="theme" aria-label="Hell/Dunkel umschalten">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5v13" /><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" class="fill"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <p class="footer__brand">Lernatlas</p>
+        <p class="muted">Unabhängiges Lernverzeichnis. Inhalte orientieren sich an den KMK-Bildungsstandards und den Lehrplänen der Länder. Prüfungsaufgaben werden nicht kopiert, sondern bei den offiziellen Stellen verlinkt.</p>
+      </div>
+      <nav aria-label="Fußzeile" class="footer__nav">
+        <a href="#/faecher">Alle Fächer</a>
+        <a href="#/pruefungen">Prüfungsarchiv</a>
+        <a href="#/quellen">Quellen &amp; Methodik</a>
+      </nav>
+    </div>
+  </footer>
+
+  <dialog class="searchdlg" aria-label="Suche">
+    <form method="dialog" class="searchdlg__form" role="search">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+      <input type="search" name="q" autocomplete="off" spellcheck="false" placeholder="Thema, Begriff oder Fach – z. B. Pythagoras, Kommasetzung, Fotosynthese">
+      <button type="button" class="searchdlg__close" data-action="close-search">Esc</button>
+    </form>
+    <div class="searchdlg__results" role="listbox"></div>
+  </dialog>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

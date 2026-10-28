@@ -1,0 +1,136 @@
+// Ausgearbeitete Themen: Chemie (Oberstufe)
+import { fr, ch, num, txt, EX, ex } from './_helpers.js';
+
+const U = (unit, more = {}) => ({ unit, ...more });
+
+export default {
+  'chemie--kunststoffe': {
+    summary: 'Kunststoffe sind Makromoleküle aus vielen kleinen Bausteinen (Monomeren). Je nach Reaktionstyp und Vernetzung entstehen Thermoplaste, Duroplaste oder Elastomere mit ganz unterschiedlichen Eigenschaften.',
+    goals: ['Polymerisation, Polykondensation und Polyaddition unterscheiden', 'Thermoplaste, Duroplaste und Elastomere nach Struktur und Eigenschaften einordnen', 'Monomere und Polymere einander zuordnen', 'Recyclingverfahren bewerten'],
+    lernzettel: [
+      { h: 'Synthesereaktionen' },
+      { tbl: { head: ['Reaktion', 'Monomere', 'Nebenprodukt', 'Beispiel'], rows: [['Polymerisation', 'mit C=C-Doppelbindung', 'keines', 'Polyethylen (PE), PVC, Polystyrol'], ['Polykondensation', 'mit zwei funktionellen Gruppen', 'kleines Molekül, meist Wasser', 'Polyester (PET), Polyamid (Nylon)'], ['Polyaddition', 'mit zwei reaktiven Gruppen', 'keines', 'Polyurethan (PUR)']] } },
+      { f: 'n CH₂=CH₂ → [–CH₂–CH₂–]ₙ', label: 'radikalische Polymerisation von Ethen zu Polyethylen' },
+      { h: 'Struktur und Eigenschaften' },
+      { tbl: { head: ['Typ', 'Struktur', 'beim Erwärmen'], rows: [['Thermoplast', 'lineare oder wenig verzweigte Ketten', 'wird weich, formbar, schmelzbar'], ['Duroplast', 'engmaschig vernetzt', 'bleibt hart, zersetzt sich'], ['Elastomer', 'weitmaschig vernetzt', 'bleibt elastisch, nicht schmelzbar']] } },
+      { h: 'Verwertung' },
+      { ul: ['<strong>werkstofflich:</strong> einschmelzen und neu formen (nur Thermoplaste, sortenrein)', '<strong>rohstofflich:</strong> in Monomere oder Öl zurückspalten', '<strong>energetisch:</strong> verbrennen und Energie nutzen'] },
+    ],
+    merkzettel: [['Monomer', 'Baustein'], ['Polymerisation', 'C=C, kein Nebenprodukt'], ['Polykondensation', 'Wasser wird abgespalten'], ['Thermoplast', 'linear, schmelzbar'], ['Duroplast', 'eng vernetzt, hart'], ['Elastomer', 'weit vernetzt, elastisch']],
+    exercises: [
+      txt('Aus welchem Monomer wird Polyethylen hergestellt?', ['Ethen', 'Ethylen'], 'Ethen (CH₂=CH₂) hat eine C=C-Doppelbindung.'),
+      ch('Bei welcher Reaktion wird ein kleines Molekül wie Wasser abgespalten?', ['Polymerisation', 'Polykondensation', 'Polyaddition', 'Verbrennung'], 1, 'Z. B. bei Polyestern und Polyamiden.'),
+      ch('Welcher Kunststofftyp lässt sich einschmelzen und neu formen?', ['Duroplast', 'Elastomer', 'Thermoplast', 'keiner'], 2, 'Die Ketten sind nicht vernetzt.'),
+      ch('Woraus besteht ein Duroplast?', ['aus unverzweigten Ketten', 'aus engmaschig vernetzten Makromolekülen', 'aus einzelnen Monomeren', 'aus Metallen'], 1, 'Darum zersetzt er sich, statt zu schmelzen.'),
+      num('Ethen hat die molare Masse 28 g/mol. Welche molare Masse hat eine PE-Kette aus 1000 Monomereinheiten?', 28000, '1000 · 28 g/mol (Endgruppen vernachlässigt)', U('g/mol')),
+      ch('Ein Gummiband soll nach dem Dehnen wieder in seine Form zurückgehen. Welche Struktur muss der Kunststoff haben?', ['lineare Ketten ohne Vernetzung', 'weitmaschige Vernetzung (Elastomer)', 'engmaschige Vernetzung (Duroplast)', 'Ionengitter'], 1, 'Die Vernetzung zieht die Ketten zurück, lässt aber Dehnung zu.', EX),
+    ],
+    exam: 'Häufig: Reaktionsgleichung einer Polymerisation formulieren, Struktur-Eigenschafts-Beziehungen erklären, Recycling bewerten.',
+  },
+
+  'chemie--chemisches-gleichgewicht': {
+    summary: 'Viele Reaktionen laufen nicht vollständig ab, sondern erreichen ein dynamisches Gleichgewicht. Das Massenwirkungsgesetz beschreibt seine Lage, das Prinzip von Le Chatelier, wie es auf äußere Störungen reagiert.',
+    goals: ['Das dynamische Gleichgewicht beschreiben', 'Das Massenwirkungsgesetz aufstellen und K berechnen', 'Das Prinzip von Le Chatelier anwenden', 'Die Bedingungen der Ammoniaksynthese begründen'],
+    lernzettel: [
+      { h: 'Dynamisches Gleichgewicht' },
+      { p: 'Hin- und Rückreaktion laufen gleich schnell ab. Die Konzentrationen bleiben dann konstant, obwohl die Teilchen weiter reagieren.' },
+      { h: 'Massenwirkungsgesetz (MWG)' },
+      { f: `a A + b B ⇌ c C + d D     K<sub>c</sub> = ${fr('c(C)<sup>c</sup> · c(D)<sup>d</sup>', 'c(A)<sup>a</sup> · c(B)<sup>b</sup>')}`, label: 'Produkte über Edukte, Koeffizienten als Exponenten' },
+      { ul: ['K ≫ 1: Gleichgewicht liegt auf der Seite der Produkte', 'K ≪ 1: Gleichgewicht liegt auf der Seite der Edukte', 'K hängt nur von der Temperatur ab'] },
+      { h: 'Prinzip von Le Chatelier' },
+      { p: 'Wird ein Gleichgewicht gestört, verschiebt es sich so, dass die Störung verringert wird.' },
+      { tbl: { head: ['Störung', 'Verschiebung'], rows: [['Konzentration eines Stoffes erhöht', 'zur Seite, die ihn verbraucht'], ['Druck erhöht (Gase)', 'zur Seite mit weniger Gasteilchen'], ['Temperatur erhöht', 'in Richtung der endothermen Reaktion'], ['Katalysator', 'keine Verschiebung, Gleichgewicht stellt sich nur schneller ein']] } },
+      { h: 'Haber-Bosch-Verfahren' },
+      { f: 'N₂ + 3 H₂ ⇌ 2 NH₃     ΔH < 0', label: 'hoher Druck (ca. 200 bar) begünstigt NH₃; ca. 450 °C als Kompromiss zwischen Ausbeute und Geschwindigkeit' },
+    ],
+    merkzettel: [['Gleichgewicht', 'v(hin) = v(rück)'], ['MWG', 'Produkte / Edukte'], ['K groß', 'viel Produkt'], ['Druck ↑', 'weniger Gasteilchen'], ['Temperatur ↑', 'endotherme Richtung'], ['Katalysator', 'keine Verschiebung']],
+    exercises: [
+      ch('Was kennzeichnet ein chemisches Gleichgewicht?', ['Die Reaktion ist beendet.', 'Hin- und Rückreaktion laufen gleich schnell ab.', 'Es sind nur Produkte vorhanden.', 'Die Temperatur ist null.'], 1, 'Dynamisch, nicht statisch.'),
+      num('Für N₂O₄ ⇌ 2 NO₂ gilt im Gleichgewicht c(NO₂) = 0,2 mol/L und c(N₂O₄) = 0,05 mol/L. Berechne K (ohne Einheit).', 0.8, 'K = 0,2² / 0,05 = 0,04 / 0,05 = 0,8'),
+      ch('Wie wirkt eine Druckerhöhung auf N₂ + 3 H₂ ⇌ 2 NH₃?', ['Verschiebung nach links', 'Verschiebung nach rechts', 'keine Wirkung', 'Reaktion stoppt'], 1, 'Rechts 2 Gasteilchen, links 4.'),
+      ch('Die Ammoniaksynthese ist exotherm. Was bewirkt eine Temperaturerhöhung?', ['mehr Ammoniak im Gleichgewicht', 'weniger Ammoniak im Gleichgewicht', 'keine Änderung', 'die Reaktion wird endotherm'], 1, 'Begünstigt wird die endotherme Rückreaktion.'),
+      ch('Was bewirkt ein Katalysator in einem Gleichgewicht?', ['Er verschiebt es zu den Produkten.', 'Er verschiebt es zu den Edukten.', 'Er beschleunigt die Einstellung, ohne die Lage zu ändern.', 'Er verändert K.'], 2, 'Hin- und Rückreaktion werden gleich beschleunigt.'),
+      num('Für H₂ + I₂ ⇌ 2 HI misst man c(HI) = 0,8 mol/L und c(H₂) = c(I₂) = 0,1 mol/L. Berechne K.', 64, 'K = 0,8² / (0,1 · 0,1) = 0,64 / 0,01 = 64', EX),
+    ],
+    exam: 'MWG-Rechnungen und Le-Chatelier-Begründungen an technischen Verfahren (Haber-Bosch, Kontaktverfahren) sind Abiturstandard.',
+  },
+
+  'chemie--reaktionsgeschwindigkeit': {
+    summary: 'Die Reaktionsgeschwindigkeit gibt an, wie schnell sich Konzentrationen ändern. Sie hängt von Konzentration, Temperatur, Zerteilungsgrad und Katalysatoren ab – erklärbar mit der Stoßtheorie.',
+    goals: ['Die Reaktionsgeschwindigkeit berechnen', 'Einflussfaktoren mit der Stoßtheorie erklären', 'Die RGT-Regel anwenden', 'Die Wirkung von Katalysatoren im Energiediagramm darstellen'],
+    lernzettel: [
+      { h: 'Definition' },
+      { f: `v = ${fr('Δc', 'Δt')}`, label: 'Konzentrationsänderung pro Zeit, Einheit mol/(L · s)' },
+      { h: 'Stoßtheorie' },
+      { p: 'Teilchen reagieren nur, wenn sie <strong>zusammenstoßen</strong>, dabei richtig ausgerichtet sind und genug Energie mitbringen (mindestens die <strong>Aktivierungsenergie</strong> E<sub>A</sub>).' },
+      { tbl: { head: ['Faktor', 'Wirkung'], rows: [['höhere Konzentration', 'mehr Zusammenstöße'], ['höhere Temperatur', 'mehr Teilchen mit E ≥ E_A, mehr Stöße'], ['feinere Zerteilung', 'größere Oberfläche'], ['Katalysator', 'senkt die Aktivierungsenergie']] } },
+      { h: 'RGT-Regel' },
+      { p: 'Reaktionsgeschwindigkeit-Temperatur-Regel (van ’t Hoff): Eine Erhöhung um 10 K verdoppelt bis vervierfacht die Geschwindigkeit.' },
+      { h: 'Katalyse' },
+      { p: 'Ein Katalysator ermöglicht einen anderen Reaktionsweg mit niedrigerer Aktivierungsenergie und liegt nach der Reaktion unverändert vor. Beispiele: Autokatalysator (Platin), Enzyme in Lebewesen.' },
+    ],
+    merkzettel: [['Geschwindigkeit', 'v = Δc / Δt'], ['Stoßtheorie', 'Stoß, Ausrichtung, Energie'], ['Aktivierungsenergie', 'Mindestenergie'], ['RGT-Regel', '+10 K → ×2 bis ×4'], ['Katalysator', 'senkt EA'], ['Oberfläche', 'feiner = schneller']],
+    exercises: [
+      num('Die Konzentration eines Edukts sinkt in 60 s von 0,8 mol/L auf 0,5 mol/L. Berechne die mittlere Reaktionsgeschwindigkeit.', 0.005, 'v = 0,3 mol/L : 60 s = 0,005 mol/(L · s)', U('mol/(L·s)')),
+      ch('Warum reagiert Holzmehl schneller als ein Holzscheit?', ['Es ist leichter.', 'Es hat eine größere Oberfläche.', 'Es enthält mehr Energie.', 'Es ist ein Katalysator.'], 1, 'Mehr Teilchen sind für Stöße zugänglich.'),
+      ch('Wie wirkt ein Katalysator?', ['Er erhöht die Temperatur.', 'Er senkt die Aktivierungsenergie.', 'Er wird verbraucht.', 'Er verschiebt das Gleichgewicht.'], 1, 'Er öffnet einen günstigeren Reaktionsweg.'),
+      num('Eine Reaktion verdoppelt ihre Geschwindigkeit pro 10 K. Um welchen Faktor wird sie schneller, wenn man von 20 °C auf 40 °C erwärmt?', 4, '2 · 2 = 4'),
+      ch('Was besagt die Stoßtheorie zusätzlich zur Energie?', ['Teilchen müssen gleich groß sein.', 'Teilchen müssen beim Stoß günstig ausgerichtet sein.', 'Nur Gase reagieren.', 'Stöße verlangsamen Reaktionen.'], 1, 'Nicht jeder Stoß führt zur Reaktion.'),
+      num('Nach der RGT-Regel verdoppelt sich die Geschwindigkeit pro 10 K. Um welchen Faktor steigt sie von 20 °C auf 50 °C?', 8, '30 K = 3 · 10 K → 2³ = 8', EX),
+    ],
+    exam: 'Typisch: Konzentrations-Zeit-Diagramme auswerten, Einflussfaktoren mit der Stoßtheorie begründen, Energiediagramme mit und ohne Katalysator zeichnen.',
+  },
+
+  'chemie--elektrochemie': {
+    summary: 'In galvanischen Zellen liefern Redoxreaktionen elektrische Energie, bei der Elektrolyse erzwingt Strom eine Reaktion. Die Spannungsreihe sagt voraus, welche Spannung eine Zelle liefert.',
+    goals: ['Den Aufbau einer galvanischen Zelle beschreiben', 'Zellspannungen aus Standardpotenzialen berechnen', 'Anode und Kathode zuordnen', 'Elektrolysen mit den Faraday-Gesetzen berechnen'],
+    lernzettel: [
+      { h: 'Galvanische Zelle (Daniell-Element)' },
+      { ul: ['Zinkhalbzelle: Zn → Zn²⁺ + 2 e⁻ (<strong>Oxidation</strong>, Anode, Minuspol)', 'Kupferhalbzelle: Cu²⁺ + 2 e⁻ → Cu (<strong>Reduktion</strong>, Kathode, Pluspol)', 'Salzbrücke bzw. Diaphragma schließt den Stromkreis über Ionen'] },
+      { note: 'Merkhilfe: An der <strong>A</strong>node findet <strong>O</strong>xidation statt (beides Vokale), an der <strong>K</strong>athode <strong>R</strong>eduktion (beides Konsonanten).', kind: 'Tipp' },
+      { h: 'Spannungsreihe' },
+      { tbl: { head: ['Redoxpaar', 'E° in V'], rows: [['Li⁺/Li', '−3,04'], ['Zn²⁺/Zn', '−0,76'], ['2 H⁺/H₂', '0,00 (Bezug)'], ['Cu²⁺/Cu', '+0,34'], ['Ag⁺/Ag', '+0,80']] } },
+      { f: 'U = E°(Kathode) − E°(Anode)', label:'Standardbedingungen: 1 mol/L, 25 °C' },
+      { h: 'Elektrolyse' },
+      { p: 'Eine äußere Spannungsquelle erzwingt die Redoxreaktion in Gegenrichtung (z. B. Laden eines Akkus, Kupferraffination, Chloralkali-Elektrolyse).' },
+      { f: `m = ${fr('M · I · t', 'z · F')}`, label: 'Faraday-Gesetz, F = 96 485 C/mol, z = übertragene Elektronen' },
+    ],
+    merkzettel: [['Anode', 'Oxidation'], ['Kathode', 'Reduktion'], ['Daniell', '1,10 V'], ['Bezugselektrode', 'Wasserstoff, 0 V'], ['Zellspannung', 'E°(Plus) − E°(Minus)'], ['Faraday', 'm = M I t / (z F)']],
+    exercises: [
+      num('Berechne die Spannung des Daniell-Elements (Zn/Cu) unter Standardbedingungen.', 1.1, 'U = 0,34 V − (−0,76 V) = 1,10 V', U('V')),
+      num('Welche Spannung liefert eine Kupfer-Silber-Zelle?', 0.46, 'U = 0,80 V − 0,34 V = 0,46 V', U('V')),
+      ch('Was geschieht an der Anode einer galvanischen Zelle?', ['Reduktion', 'Oxidation', 'Neutralisation', 'nichts'], 1, 'Elektronen werden abgegeben.'),
+      ch('Welches Metall ist im Daniell-Element der Minuspol?', ['Kupfer', 'Zink', 'Silber', 'Platin'], 1, 'Zink ist unedler und gibt Elektronen ab.'),
+      ch('Was unterscheidet eine Elektrolyse von einer galvanischen Zelle?', ['Bei der Elektrolyse wird eine Reaktion durch äußere Spannung erzwungen.', 'Bei der Elektrolyse entsteht Strom.', 'Es gibt keinen Unterschied.', 'Elektrolysen laufen nur mit Gasen ab.'], 0, 'Elektrische Energie wird in chemische umgewandelt.'),
+      num('Bei einer Kupferelektrolyse fließen 2 A eine Stunde lang. Wie viel Kupfer (M = 63,55 g/mol, z = 2) scheidet sich ab?', 2.37, 'm = 63,55 · 2 · 3600 / (2 · 96 485) ≈ 2,37 g', ex(U('g', { tol: 0.01 }))),
+    ],
+    exam: 'Galvanische Zellen, Akkus (Lithium-Ionen, Bleiakku) und Brennstoffzellen sind Abiturschwerpunkte, oft mit Spannungs- und Faraday-Rechnungen.',
+  },
+
+  'chemie--naturstoffe': {
+    summary: 'Fette, Kohlenhydrate und Proteine sind die Grundbausteine der Nahrung und des Lebens. Ihre Struktur erklärt ihre Eigenschaften – von der Löslichkeit bis zur Denaturierung.',
+    goals: ['Den Aufbau von Fetten erklären', 'Mono-, Di- und Polysaccharide unterscheiden', 'Die Peptidbindung und Proteinstrukturen beschreiben', 'Nachweisreaktionen zuordnen'],
+    lernzettel: [
+      { h: 'Fette' },
+      { p: 'Fette sind <strong>Ester</strong> aus Glycerin und drei Fettsäuren (Triglyceride). Gesättigte Fettsäuren (ohne C=C) ergeben feste Fette, ungesättigte (mit C=C) flüssige Öle. Fette sind unpolar und daher nicht wasserlöslich.' },
+      { h: 'Kohlenhydrate' },
+      { tbl: { head: ['Gruppe', 'Beispiele'], rows: [['Monosaccharide', 'Glucose (C₆H₁₂O₆), Fructose'], ['Disaccharide', 'Saccharose (Haushaltszucker), Maltose, Lactose'], ['Polysaccharide', 'Stärke (Speicher in Pflanzen), Cellulose (Zellwand), Glykogen (Speicher bei Tieren)']] } },
+      { h: 'Proteine' },
+      { p: 'Proteine bestehen aus Aminosäuren (20 kanonische, proteinogene), die über <strong>Peptidbindungen</strong> (–CO–NH–) unter Wasserabspaltung verknüpft sind.' },
+      { ul: ['Primärstruktur: Reihenfolge der Aminosäuren', 'Sekundärstruktur: α-Helix, β-Faltblatt (Wasserstoffbrücken)', 'Tertiärstruktur: räumliche Faltung der Kette', 'Quartärstruktur: mehrere Ketten (z. B. Hämoglobin)'] },
+      { p: 'Hitze, Säuren oder Schwermetalle zerstören die Raumstruktur: <strong>Denaturierung</strong> (z. B. Eiweiß beim Kochen).' },
+      { h: 'Nachweise' },
+      { tbl: { head: ['Nachweis', 'Stoff', 'Beobachtung'], rows: [['Iod-Kaliumiodid-Lösung', 'Stärke', 'blau-violett'], ['Fehling-Probe', 'reduzierende Zucker (Glucose)', 'ziegelroter Niederschlag'], ['Biuret-Reaktion', 'Proteine', 'violett'], ['Fettfleckprobe', 'Fette', 'durchscheinender Fleck']] } },
+    ],
+    merkzettel: [['Fett', 'Glycerin + 3 Fettsäuren'], ['ungesättigt', 'C=C, flüssig'], ['Glucose', 'C₆H₁₂O₆'], ['Stärke', 'Iod → blau-violett'], ['Peptidbindung', '–CO–NH–'], ['Denaturierung', 'Raumstruktur zerstört']],
+    exercises: [
+      ch('Woraus bestehen Fette?', ['aus Aminosäuren', 'aus Glycerin und drei Fettsäuren', 'aus Glucoseketten', 'aus Nukleotiden'], 1, 'Triglyceride sind Ester.'),
+      num('Berechne die molare Masse von Glucose C₆H₁₂O₆ (C = 12, H = 1, O = 16 g/mol).', 180, '6 · 12 + 12 · 1 + 6 · 16 = 180', U('g/mol')),
+      ch('Welcher Nachweis färbt sich mit Stärke blau-violett?', ['Fehling-Probe', 'Biuret-Reaktion', 'Iod-Kaliumiodid-Lösung', 'Glimmspanprobe'], 2, 'Iodmoleküle lagern sich in die Stärkehelix ein.'),
+      num('Aus wie vielen kanonischen (proteinogenen) Aminosäuren bauen Lebewesen ihre Proteine überwiegend auf?', 20, 'Dazu kommen seltene Sonderfälle wie Selenocystein.'),
+      ch('Welche Bindung verknüpft Aminosäuren?', ['Esterbindung', 'Peptidbindung', 'glykosidische Bindung', 'Ionenbindung'], 1, '–CO–NH–, unter Wasserabspaltung.'),
+      ch('Warum wird Eiklar beim Kochen fest und weiß?', ['Es verdunstet Wasser.', 'Die Proteine denaturieren: Ihre Raumstruktur wird durch Hitze zerstört.', 'Es bildet sich Stärke.', 'Fette schmelzen.'], 1, 'Die Primärstruktur bleibt erhalten, die Faltung nicht.', EX),
+    ],
+    exam: 'Naturstoffe werden oft mit Nachweisreaktionen und Struktur-Eigenschafts-Fragen geprüft, z. B. Fetthärtung oder Denaturierung.',
+  },
+};
