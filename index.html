@@ -89,10 +89,11 @@
   <dialog class="searchdlg" aria-label="Suche">
     <form method="dialog" class="searchdlg__form" role="search">
       <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
-      <input type="search" name="q" autocomplete="off" spellcheck="false" placeholder="Thema, Begriff oder Fach – z. B. Pythagoras, Kommasetzung, Fotosynthese">
+      <input type="search" name="q" autocomplete="off" spellcheck="false" aria-label="Thema, Begriff oder Fach suchen" placeholder="Thema, Begriff oder Fach – z. B. Pythagoras, Kommasetzung, Fotosynthese">
       <button type="button" class="searchdlg__close" data-action="close-search">Esc</button>
     </form>
-    <div class="searchdlg__results" role="listbox"></div>
+    <div class="searchdlg__results"></div>
+    <p class="visually-hidden" aria-live="polite" data-search-status></p>
   </dialog>
 
   <script type="module" src="assets/js/app.js"></script>

@@ -83,4 +83,9 @@ Nebenbei: **Menü für schmale Bildschirme**. Unter 960 px öffnet ein Menü-Kno
   - Texte vor dem Livegang rechtlich prüfen lassen, sie sind keine Rechtsberatung.
 - [ ] Hosting festlegen (statisch, z. B. GitHub Pages oder Netlify mit EU-Region)
 - [ ] Alle Inhalte fachlich gegenlesen lassen
-- [ ] Barrierefreiheit prüfen (Kontraste, Screenreader, Tastaturbedienung)
+- [ ] Barrierefreiheit prüfen (Kontraste, Screenreader, Tastaturbedienung). Automatische Prüfung am 29.10.2026 mit eigenen Skripten im Browser, nach WCAG 2.2 AA:
+  - **Kontraste:** 12 Seitentypen in Hell und Dunkel geprüft, jetzt ohne Fehler. Behoben: Die dritte Textfarbe `--ink-3` im Hellmodus hatte nur 3,7–4,4:1, jetzt `#6a6559` mit mindestens 4,7:1. Außerdem Grün für „Frei“, die Zugangs-Etiketten, die Aufgabennummern und der Button-Hover (weiße Schrift auf Orange hatte nur 3,8:1).
+  - **Tastatur:** Die Reiter sind nach dem ARIA-Muster verknüpft (`aria-controls`, nur der aktive Reiter in der Tab-Reihenfolge, Pfeiltasten sowie Pos1/Ende). Nach einem Seitenwechsel springt der Fokus auf den Inhalt. Die Eingabefelder der Übungen zeigen wieder den normalen Fokusrahmen.
+  - **Screenreader:** Das Suchfeld hat eine Beschriftung, und die Trefferzahl wird angesagt. Die Rückmeldung zu Übungen wird jetzt zuverlässig vorgelesen (die Live-Region war vorher beim Einfügen noch ausgeblendet). Schmuckzeichen sind ausgeblendet.
+  - **Ohne Befund:** Sprache, Überschriften-Reihenfolge, Landmarken, Beschriftung aller Formularfelder und Buttons, doppelte IDs, ARIA-Verweise, Umbruch ohne seitliches Scrollen bei 320 px (400 % Zoom), `prefers-reduced-motion`.
+  - **Offen:** einmal echt mit einem Screenreader durchgehen (NVDA unter Windows, VoiceOver auf dem iPhone). Automatische Prüfungen finden erfahrungsgemäß nur einen Teil der Probleme.

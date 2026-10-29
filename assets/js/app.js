@@ -77,7 +77,7 @@ function viewHome() {
   return `
   <section class="hero"><div class="wrap hero__grid">
     <div>
-      <p class="label"><b>●</b> Hauptschule · Realschule · Gymnasium</p>
+      <p class="label"><b aria-hidden="true">●</b> Hauptschule · Realschule · Gymnasium</p>
       <h1 style="margin-top:14px">Alles bis zum <em>Abschluss</em> – an einem Ort, sauber sortiert.</h1>
       <button class="bigsearch" type="button" data-action="open-search">
         <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
@@ -220,7 +220,7 @@ function viewTopic(id, params) {
       <div class="actions"><a class="btn" href="#/karten/${id}">Als Karteikarten lernen${cardHint(id, c)}</a><button class="btn btn--ghost" data-action="print">Merkzettel drucken</button><button class="btn btn--ghost" data-tab-go="uebungen">Wissen testen →</button></div>`,
     uebungen: () => `<div class="scoreline"><span class="label">Fortschritt</span><strong data-score>0/${c.exercises.length}</strong><div class="progress"><i data-bar></i></div><button class="chip" data-action="reset">Zurücksetzen</button></div><div data-exercises></div>`,
     ueberblick: () => `<div class="pending">
-        <p class="label"><b>●</b> In Bearbeitung</p>
+        <p class="label"><b aria-hidden="true">●</b> In Bearbeitung</p>
         <h2>Lernzettel & Übungen folgen</h2>
         <p>Für „${t.title}“ erstellen wir gerade Lernzettel, Merkzettel und Übungen. Bis dahin findest du unter <a href="#/thema/${id}?tab=videos" data-tab-link="videos">Videos</a> passende Erklärungen geprüfter Bildungskanäle und unter <a href="#/thema/${id}?tab=quellen" data-tab-link="quellen">Quellen</a> verlässliche Nachschlagewerke.</p>
         ${t.keywords ? `<p class="muted">Stichworte: ${t.keywords}</p>` : ''}
@@ -284,10 +284,10 @@ function viewTopic(id, params) {
     meta: metaItem('Fach', `<a href="#/fach/${s.id}">${s.name}</a>`) + metaItem('Stufe', kLabel(t.k)) + metaItem('Schulformen', schoolBadges(t.schools)) + landNameMeta(s) + metaItem('Status', status(!!c)),
   }) + `
   <div class="tabs"><div class="wrap tabs__inner" role="tablist">
-    ${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${k === active}">${label}${n ? ` <span class="tab__n">${n}</span>` : ''}</button>`).join('')}
+    ${tabs.map(([k, label, n]) => `<button class="tab" role="tab" id="tab-${k}" aria-controls="panel-${k}" tabindex="${k === active ? 0 : -1}" data-tab="${k}" aria-selected="${k === active}">${label}${n ? ` <span class="tab__n">${n}</span>` : ''}</button>`).join('')}
   </div></div>
   <div class="wrap topicbody" data-topic="${id}">
-    <div>${tabs.map(([k]) => `<section class="panel" role="tabpanel" data-panel="${k}" ${k === active ? '' : 'hidden'}>${panels[k]()}</section>`).join('')}</div>
+    <div>${tabs.map(([k]) => `<section class="panel" role="tabpanel" id="panel-${k}" aria-labelledby="tab-${k}" data-panel="${k}" ${k === active ? '' : 'hidden'}>${panels[k]()}</section>`).join('')}</div>
     <aside class="aside">
       ${c ? `<div class="aside__box"><span class="label">Dein Stand</span><div class="progress"><i data-bar></i></div><p class="muted" style="font-size:14px;margin:8px 0 0" data-score-text></p></div>` : ''}
       ${upcoming().filter((x) => x.topics.includes(id)).map((x) => `<div class="aside__box"><span class="label">Lernplan</span><p style="margin:4px 0 0"><a href="#/plan">${examTitle(x)}</a><br><span class="muted" style="font-size:14px">${daysUntil(x.date) === 0 ? 'heute' : `in ${daysUntil(x.date)} ${daysUntil(x.date) === 1 ? 'Tag' : 'Tagen'}`}${topicDone(id) ? ' · Thema erledigt' : ''}</span></p></div>`).join('')}
@@ -636,7 +636,7 @@ function parseHash() {
   return { parts: path.split('/').filter(Boolean).map(decodeURIComponent), params: new URLSearchParams(qs || '') };
 }
 
-let lastPath = '';
+let lastPath = null;
 function route() {
   const { parts, params } = parseHash();
   const [a, b] = parts;
@@ -661,7 +661,10 @@ function route() {
   main.innerHTML = html;
   document.title = title;
   document.querySelectorAll('[data-nav]').forEach((n) => n.classList.toggle('is-active', n.dataset.nav === a || (a === 'fach' && n.dataset.nav === 'faecher') || (a === 'pruefung' && n.dataset.nav === 'pruefungen')));
-  if (path !== lastPath) window.scrollTo(0, 0);
+  if (path !== lastPath) {
+    window.scrollTo(0, 0);
+    if (lastPath !== null) main.focus({ preventScroll: true });
+  }
   lastPath = path;
   setMenu(false);
 
@@ -937,7 +940,7 @@ function mountTopic(id) {
 function selectTab(key) {
   const tabs = document.querySelectorAll('[data-tab]');
   if (![...tabs].some((t) => t.dataset.tab === key)) return;
-  tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === key)));
+  tabs.forEach((t) => { t.setAttribute('aria-selected', String(t.dataset.tab === key)); t.tabIndex = t.dataset.tab === key ? 0 : -1; });
   document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== key; });
   const { parts } = parseHash();
   history.replaceState(null, '', `#/${parts.join('/')}?tab=${key}`);
@@ -949,6 +952,7 @@ function selectTab(key) {
 const dlg = $('.searchdlg');
 const dlgInput = $('input', dlg);
 const dlgResults = $('.searchdlg__results', dlg);
+const dlgStatus = $('[data-search-status]', dlg);
 let sel = -1;
 
 function openSearch(prefill = '') {
@@ -965,11 +969,13 @@ function renderHits() {
   if (!q.trim()) {
     const full = ALL_TOPICS.filter((t) => CONTENT[t.id] && fitsSchool(t)).slice(0, 8);
     dlgResults.innerHTML = `<div class="hit__group label">Ausgearbeitete Themen</div>${full.map((t) => hitHtml(t, '')).join('')}`;
+    dlgStatus.textContent = '';
     return;
   }
   const { topics, subjects } = search(q, { school: store.school, limit: 12 });
   if (!topics.length && !subjects.length) {
     dlgResults.innerHTML = `<p class="searchdlg__empty">Nichts gefunden für „${escapeHtml(q)}“. Versuche einen anderen Begriff.</p>`;
+    dlgStatus.textContent = 'Keine Treffer.';
     return;
   }
   dlgResults.innerHTML =
@@ -977,6 +983,8 @@ function renderHits() {
       <a class="hit" href="#/fach/${s.id}"><span class="row__sym" style="color:var(--g-${s.g})">${s.sym}</span><span><span class="hit__title">${highlight(s.name, q)}</span><span class="hit__meta">${countTopics(s)} Themen</span></span><span></span></a>`).join('')}` : '') +
     (topics.length ? `<div class="hit__group label">Themen</div>${topics.map((r) => hitHtml(r.topic, q, r.fits)).join('')}
       <a class="hit" href="#/suche?q=${encodeURIComponent(q)}"><span></span><span class="hit__title">Alle Ergebnisse anzeigen →</span><span></span></a>` : '');
+  const n = topics.length + Math.min(subjects.length, 3);
+  dlgStatus.textContent = `${n} Treffer. Mit Pfeiltasten auswählen, Enter öffnet.`;
 }
 
 function hitHtml(t, q, fits = true) {
@@ -1064,9 +1072,10 @@ document.addEventListener('keydown', (e) => {
 
 // Tabs per Pfeiltaste
 document.addEventListener('keydown', (e) => {
-  if (!(e.target instanceof Element) || !e.target.matches('[data-tab]') ||!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+  if (!(e.target instanceof Element) || !e.target.matches('[data-tab]') || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+  e.preventDefault();
   const tabs = [...document.querySelectorAll('[data-tab]')];
-  const i = tabs.indexOf(e.target) + (e.key === 'ArrowRight' ? 1 : -1);
+  const i = { Home: 0, End: tabs.length - 1 }[e.key] ?? tabs.indexOf(e.target) + (e.key === 'ArrowRight' ? 1 : -1);
   const next = tabs[(i + tabs.length) % tabs.length];
   next.focus(); selectTab(next.dataset.tab);
 });

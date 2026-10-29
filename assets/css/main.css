@@ -10,16 +10,18 @@
   --card: #fbf9f4;
   --ink: #1b1a17;
   --ink-2: #4a463e;
-  --ink-3: #7b7568;
+  --ink-3: #6a6559;
   --line: #d8d1c2;
   --line-2: #c3baa7;
   --signal: #e2552b;
   --signal-ink: #b23b16;
-  --ok: #2f7a4f;
+  --ok: #2e764d;
   --ok-bg: #e2efe5;
   --bad: #b3361c;
   --bad-bg: #f7e1da;
   --focus: #1f5fd1;
+  --btn-hi: #b23b16;      /* Button-Hover: weiße Schrift braucht die dunkle Signalfarbe */
+  --btn-hi-ink: #fff;
 
   /* Fachgruppen-Pigmente (gedeckt, nur als Akzent) */
   --g-sprache: #c8462c;
@@ -46,6 +48,7 @@
     --signal: #f06a3e; --signal-ink: #ff8c63;
     --ok: #6fc28f; --ok-bg: #1d2e23; --bad: #ff8a6e; --bad-bg: #3a1f18;
     --focus: #7aa7ff;
+    --btn-hi: #f06a3e; --btn-hi-ink: #151412;
     --g-sprache: #e0694d; --g-mint: #5aa3c7; --g-gesell: #c9a24a;
     --g-musisch: #c873aa; --g-werte: #8db06f; --g-praxis: #9a98d0;
   }
@@ -57,6 +60,7 @@
   --signal: #f06a3e; --signal-ink: #ff8c63;
   --ok: #6fc28f; --ok-bg: #1d2e23; --bad: #ff8a6e; --bad-bg: #3a1f18;
   --focus: #7aa7ff;
+  --btn-hi: #f06a3e; --btn-hi-ink: #151412;
   --g-sprache: #e0694d; --g-mint: #5aa3c7; --g-gesell: #c9a24a;
   --g-musisch: #c873aa; --g-werte: #8db06f; --g-praxis: #9a98d0;
 }
@@ -94,7 +98,7 @@ sup, sub { line-height: 0; }
   font-family: var(--f-mono); font-size: 12px; font-weight: 500;
   text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3);
 }
-.label b { color: var(--signal); font-weight: 500; }
+.label b { color: var(--signal-ink); font-weight: 500; }
 
 /* ---------- Kopfzeile ---------- */
 .topbar {
@@ -325,7 +329,7 @@ sup, sub { line-height: 0; }
 .example__body p:last-child { margin: 0; }
 .note { margin: 1.2em 0; padding: 12px 16px; border-left: 3px solid var(--signal); background: color-mix(in srgb, var(--signal) 7%, var(--card)); }
 .note strong:first-child { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--signal-ink); margin-right: 6px; }
-mark.todo { background: color-mix(in srgb, var(--signal) 18%, transparent); color: var(--signal-ink); padding: 0 4px; border-radius: 2px; font-family: var(--f-mono); font-size: .85em; }
+mark.todo { background: color-mix(in srgb, var(--signal) 10%, transparent); color: var(--signal-ink); padding: 0 4px; border-radius: 2px; font-family: var(--f-mono); font-size: .85em; }
 .tbl { width: 100%; border-collapse: collapse; margin: 1.2em 0; font-size: 15.5px; display: block; overflow-x: auto; }
 .tbl th, .tbl td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .tbl th { font-family: var(--f-mono); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); border-bottom: 1.5px solid var(--ink); }
@@ -386,7 +390,7 @@ mark.todo { background: color-mix(in srgb, var(--signal) 18%, transparent); colo
   display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: var(--r);
   border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; font-size: 15px; text-decoration: none;
 }
-.btn:hover { background: var(--signal); border-color: var(--signal); color: #fff; }
+.btn:hover { background: var(--btn-hi); border-color: var(--btn-hi); color: var(--btn-hi-ink); }
 .btn--ghost { background: transparent; color: var(--ink); }
 .btn--ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .btn[disabled] { opacity: .4; pointer-events: none; }
@@ -427,7 +431,7 @@ mark.todo { background: color-mix(in srgb, var(--signal) 18%, transparent); colo
 .ansrow input {
   height: 44px; width: min(260px, 100%); padding: 0 12px; border: 1.5px solid var(--line-2); border-radius: var(--r); background: var(--paper); font-size: 17px;
 }
-.ansrow input:focus { border-color: var(--ink); outline: none; }
+.ansrow input:focus { border-color: var(--ink); }
 .ansrow input.is-right { border-color: var(--ok); background: var(--ok-bg); }
 .ansrow input.is-wrong { border-color: var(--bad); background: var(--bad-bg); }
 .ansrow .unit { color: var(--ink-3); }
@@ -440,7 +444,7 @@ mark.todo { background: color-mix(in srgb, var(--signal) 18%, transparent); colo
 .match select.is-wrong { border-color: var(--bad); background: var(--bad-bg); }
 .cloze { line-height: 2.4; font-size: 17px; margin: 0; }
 .gap { height: 34px; padding: 0 6px; margin: 0 2px; border: 0; border-bottom: 2px solid var(--ink-2); background: var(--paper-2); font: inherit; text-align: center; }
-.gap:focus { outline: none; border-color: var(--signal); }
+.gap:focus { border-color: var(--signal); }
 .gap.is-right { border-color: var(--ok); background: var(--ok-bg); }
 .gap.is-wrong { border-color: var(--bad); background: var(--bad-bg); }
 .order { list-style: none; counter-reset: ord; margin: 0; padding: 0; display: grid; gap: 6px; }
@@ -462,7 +466,7 @@ mark.todo { background: color-mix(in srgb, var(--signal) 18%, transparent); colo
 @media (max-width: 520px) { .match__row { grid-template-columns: 1fr; gap: 6px; } }
 .ex__foot { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 .fb { margin-top: 14px; padding: 12px 14px; border-radius: var(--r); font-size: 15.5px; }
-.fb[hidden] { display: none; }
+.fb[hidden], .fb:empty { display: none; }
 .fb--ok { background: var(--ok-bg); color: var(--ok); }
 .fb--bad { background: var(--bad-bg); color: var(--bad); }
 .fb--sol { background: var(--paper-2); color: var(--ink); border-left: 3px solid var(--ink); }
@@ -526,8 +530,8 @@ mark.todo { background: color-mix(in srgb, var(--signal) 18%, transparent); colo
 .fileyear a:hover { border-color: var(--ink-2); color: var(--ink); }
 .access { font-family: var(--f-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 3px 7px; border-radius: 2px; justify-self: start; }
 .access--frei { background: var(--ok-bg); color: var(--ok); }
-.access--login { background: color-mix(in srgb, var(--g-gesell) 16%, var(--card)); color: var(--g-gesell); }
-.access--beispiel { background: color-mix(in srgb, var(--g-mint) 14%, var(--card)); color: var(--g-mint); }
+.access--login { background: color-mix(in srgb, var(--g-gesell) 16%, var(--card)); color: color-mix(in srgb, var(--g-gesell) 75%, var(--ink)); }
+.access--beispiel { background: color-mix(in srgb, var(--g-mint) 14%, var(--card)); color: color-mix(in srgb, var(--g-mint) 75%, var(--ink)); }
 .access--info { background: var(--paper-2); color: var(--ink-3); }
 .factbox { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--line); background: var(--card); margin-bottom: 32px; }
 .factbox div { padding: 14px 16px; border-right: 1px solid var(--line); }

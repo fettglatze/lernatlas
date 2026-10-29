@@ -226,7 +226,7 @@ export function renderExercise(ex, idx, topicId, onChange) {
         <button type="button" class="btn" data-do="check">Prüfen</button>
         <button type="button" class="btn btn--ghost" data-do="solve" hidden>Lösung zeigen</button>
       </div>
-      <div class="fb" hidden aria-live="polite"></div>
+      <div class="fb" aria-live="polite"></div>
     </div>`;
 
   const fb = el.querySelector('.fb');

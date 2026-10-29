@@ -4,7 +4,7 @@
 // Externe Seiten (YouTube, Prüfungsarchive, Schriften von Google) werden nicht zwischengespeichert.
 
 // PRECACHE-START – erzeugt von tools/pwa/build_sw.py, nicht von Hand ändern
-const VERSION = '3ef411ce30ae';
+const VERSION = 'e25f30a607cb';
 const FILES = [
   "./",
   "assets/css/fonts.css",
