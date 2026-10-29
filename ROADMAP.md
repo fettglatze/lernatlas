@@ -1,6 +1,6 @@
 # Lernatlas – Roadmap
 
-Stand: 29.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4: Schritte 1, 2, 4 fertig, Schritt 3 begonnen (6 Prüfungsseiten) · Phase 5 abgeschlossen (Bundesland-Auswahl, Lehrpläne, Abitur Deutsch, Weg zum Abitur, Ethik-Fachnamen) · Phase 6 Schritte 1–3 fertig (Karteikarten, Lernplan, neue Aufgabentypen)
+Stand: 29.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4: Schritte 1, 2, 4 fertig, Schritt 3 begonnen (6 Prüfungsseiten) · Phase 5 abgeschlossen (Bundesland-Auswahl, Lehrpläne, Abitur Deutsch, Weg zum Abitur, Ethik-Fachnamen) · Phase 6 abgeschlossen (Karteikarten, Lernplan, neue Aufgabentypen, Offline als PWA)
 
 ## Phase 1 – Fundament ✅
 
@@ -58,7 +58,7 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
 2. ✅ **Abitur Deutsch: Lektüren und Themenfelder** (`data/abi-focus.js`, Seite `#/abi-deutsch`): ländergemeinsame Lektüren und Themenfelder des IQB-Pools (Vereinbarung vom 05.01.2026) sowie Landesvorgaben Bayern 2027–2029, NRW 2027 und 2028, Hamburg 2028, jeweils mit amtlicher Quelle. Verlinkt aus dem Prüfungsarchiv und dem Reiter „Prüfung“ der Deutsch-Themen. Offen: BW (keine amtliche Quelle zu den Sternchenthemen 2027 gefunden), NRW 2029 (Dokument vorhanden, noch nicht ausgewertet), weitere Länder und Fächer.
 3. ✅ **Weg zum Abitur und Fachbezeichnungen** (`data/land-info.js`): Für alle 16 Länder ist die Dauer des Gymnasiums erfasst (G8/G9, Umstellungen, Oberstufe), jeweils mit amtlicher Quelle (Ministerium, in Sachsen-Anhalt das Schulgesetz). Angezeigt im Prüfungsarchiv und im Reiter „Prüfung“ der Themen mit Abiturbezug. Den Namen des Fachs Ethik je Land (z. B. Werte und Normen, LER, Praktische Philosophie) liefert der KMK-Bericht (Stand 25.06.2020); er erscheint auf der Fach- und den Themenseiten. Offen: Politik, Wirtschaft und AWT. Die Namen hängen dort zusätzlich von der Schulform ab, eine amtliche Übersicht fehlt. Sie müssten aus den Stundentafeln der Länder einzeln erhoben werden.
 
-## Phase 6 – Lernwerkzeuge
+## Phase 6 – Lernwerkzeuge ✅
 
 1. ✅ **Karteikarten** (`assets/js/cards.js`, Seite `#/karten`): Die Merkzettel aller ausgearbeiteten Themen werden zur Lernkartei nach Leitner mit fünf Fächern. Gewusste Karten kommen nach 1, 3, 7, 14 und 30 Tagen wieder, nicht gewusste in derselben Runde noch einmal. Die Übersicht zeigt fällige Karten über alle Themen und den Stand je Fach. Bedienbar per Tastatur (Leertaste, 1, 2). Gespeichert wird nur lokal (`cards` im localStorage). Einstieg über den Reiter „Merkzettel“, die Kopfzeile und den Footer.
 2. ✅ **Lernplan mit Countdown** (`assets/js/plan.js`, Seite `#/plan`): Prüfungstermine selbst eintragen (Fach, Datum, Name) und die Themen auswählen. Es gibt keine Vorauswahl, denn welche Themen drankommen, weiß nur die Schule. Der Plan verteilt die offenen Themen gleichmäßig auf die Wochen bis zur Prüfung. Ab zwei Wochen Vorlauf bleiben die letzten sieben Tage für die Wiederholung. Ein Thema gilt als erledigt, wenn alle Übungen gelöst sind, und der Plan rechnet sich danach neu. Je Thema gibt es Links zu Lernzettel, Übungen und Karteikarten. Die Themenseite zeigt in der Seitenleiste, zu welchem Lernplan das Thema gehört. Gespeichert wird nur lokal (`exams`).
@@ -69,7 +69,11 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
    - **Graph ablesen**: optionales `graph`-Feld bei jeder Aufgabe, gezeichnet als SVG-Koordinatensystem. Funktionsgraphen liefert der Helfer `plot()`.
 
    Bei Fehlern wird jeder Teil einzeln markiert, und „Lösung zeigen“ trägt die Lösung direkt ein. Die Mischung ist je Aufgabe fest, damit die Reihenfolge beim Neuladen gleich bleibt. 14 Beispielaufgaben in 10 Themen stehen in `data/content/aufgabentypen.js`. Sie werden hinten angehängt, damit der gespeicherte Fortschritt der alten Aufgaben erhalten bleibt. Nebenbei behoben: Ausgeblendete Buttons (`hidden`) blieben sichtbar, darunter „Lösung zeigen“ nach richtiger Antwort.
-4. Offline-Nutzung als PWA
+4. ✅ **Offline-Nutzung als PWA** (`sw.js`, `manifest.webmanifest`, `assets/icons/`): Die Seite lässt sich auf dem Handy und am Rechner installieren. Beim ersten Besuch speichert der Service Worker alle Seiten, Skripte, Stile und Inhalte (61 Dateien). Danach funktionieren Lernzettel, Übungen, Karteikarten und Lernplan ohne Internet. Er lädt zuerst aus dem Netz und greift nur ohne Verbindung auf den Cache zurück, damit nie eine veraltete Fassung hängen bleibt. Offline erscheint oben ein Hinweis, denn Videos, externe Links und die Google-Schriften brauchen weiter Internet. Ohne Netz springen Systemschriften ein.
+   - **Nach jeder Änderung an Dateien:** `python tools/pwa/build_sw.py` ausführen. Das Skript schreibt die Dateiliste und eine neue Version (Prüfsumme) in `sw.js`, dann tauscht der Browser den Cache aus.
+   - Die Icons erzeugt `python tools/pwa/icons.py` (braucht Pillow).
+
+Nebenbei: **Menü für schmale Bildschirme**. Unter 960 px öffnet ein Menü-Knopf in der Kopfzeile die Navigation als Liste. Es schließt per Link, Escape oder Klick daneben, und `aria-expanded` wird mitgeführt. Unter 420 px wandert der Hell/Dunkel-Schalter ins Menü, damit die Kopfzeile auf das Handy passt.
 
 ## Vor dem Livegang (Pflicht)
 

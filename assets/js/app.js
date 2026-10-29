@@ -595,6 +595,7 @@ function route() {
   document.querySelectorAll('[data-nav]').forEach((n) => n.classList.toggle('is-active', n.dataset.nav === a || (a === 'fach' && n.dataset.nav === 'faecher') || (a === 'pruefung' && n.dataset.nav === 'pruefungen')));
   if (path !== lastPath) window.scrollTo(0, 0);
   lastPath = path;
+  setMenu(false);
 
   if (a === 'thema') mountTopic(b);
   if (a === 'pruefung') mountPractice(b);
@@ -946,6 +947,8 @@ document.addEventListener('click', (e) => {
   if (action === 'close-search') dlg.close();
   if (action === 'print') window.print();
   if (action === 'theme') toggleTheme();
+  if (action === 'menu') setMenu(!$('.topbar').classList.contains('is-open'));
+  else if (!t.closest('.mainnav') || t.closest('.mainnav a')) setMenu(false);
   if (action === 'reset-practice') { const set = t.closest('[data-practice]')?.dataset.practice; if (set) { store.resetTopic(`uebung:${set}`); const y = window.scrollY; route(); window.scrollTo(0, y); } }
   if (action === 'reset') { const id = $('[data-topic]')?.dataset.topic; if (id) { store.resetTopic(id); route(); selectTab('uebungen'); } }
   if (action === 'yt') {
@@ -996,6 +999,17 @@ document.addEventListener('keydown', (e) => {
   next.focus(); selectTab(next.dataset.tab);
 });
 
+// Menü für schmale Bildschirme
+function setMenu(open) {
+  $('.topbar').classList.toggle('is-open', open);
+  const b = $('[data-action="menu"]');
+  b.setAttribute('aria-expanded', String(open));
+  b.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && $('.topbar').classList.contains('is-open')) { setMenu(false); $('[data-action="menu"]').focus(); }
+});
+
 function syncHeader() { $('[data-action="school"]').value = store.school; $('[data-action="land"]').value = store.land; }
 
 function applyTheme() {
@@ -1012,3 +1026,13 @@ applyTheme();
 syncHeader();
 window.addEventListener('hashchange', route);
 route();
+
+// ───────────────────────── Offline (PWA) ─────────────────────────
+// sw.js speichert alle eigenen Dateien; ohne Netz läuft die Seite aus dem Cache weiter.
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('./sw.js').catch(() => { /* z. B. privater Modus – Seite läuft trotzdem */ });
+}
+const syncOnline = () => { $('.offline').hidden = navigator.onLine; };
+window.addEventListener('online', syncOnline);
+window.addEventListener('offline', syncOnline);
+syncOnline();

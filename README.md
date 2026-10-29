@@ -17,6 +17,9 @@ Dann http://localhost:8090 öffnen.
 ```
 lernatlas/
 ├── index.html               Grundgerüst, Kopfzeile, Suchdialog
+├── manifest.webmanifest     PWA: Name, Farben, Icons
+├── sw.js                    Service Worker (offline), Dateiliste generiert
+├── assets/icons/            App-Icons (192, 512, maskable, Apple)
 ├── assets/css/main.css      Design-System (Tokens, Hell/Dunkel, Druckansicht)
 ├── assets/js/
 │   ├── app.js               Router (#/…), alle Ansichten, globale Events
@@ -27,6 +30,7 @@ lernatlas/
 │   ├── render.js            Lernzettel-Blöcke → HTML
 │   └── store.js             Schulform, Bundesland, Fortschritt, Karteikarten, Prüfungstermine (localStorage)
 ├── tools/exams/deeplinks.py erzeugt data/exam-files.js (direkte Links auf Länder-PDFs)
+├── tools/pwa/                build_sw.py (nach jeder Änderung ausführen), icons.py
 ├── tools/linkcheck.py       prüft alle Links in data/ (monatlich: python tools/linkcheck.py)
 ├── tools/videos/            Skripte zum Kuratieren und Prüfen von Videos (Python)
 └── data/
