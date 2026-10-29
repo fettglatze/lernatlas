@@ -32,6 +32,7 @@ lernatlas/
 │   ├── render.js            Lernzettel-Blöcke → HTML
 │   └── store.js             Schulform, Bundesland, Fortschritt, Karteikarten, Prüfungstermine (localStorage)
 ├── tools/exams/deeplinks.py erzeugt data/exam-files.js (direkte Links auf Länder-PDFs)
+├── tools/bundle/build_html.py packt alles in eine Datei: dist/lernatlas.html (per Doppelklick, ohne Server)
 ├── tools/fonts/fetch_fonts.py lädt die Schriften einmalig von Google und legt sie lokal ab
 ├── tools/pwa/                build_sw.py (nach jeder Änderung ausführen), icons.py
 ├── tools/linkcheck.py       prüft alle Links in data/ (monatlich: python tools/linkcheck.py)
