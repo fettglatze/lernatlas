@@ -4,23 +4,21 @@
 // Externe Seiten (YouTube, Prüfungsarchive, Schriften von Google) werden nicht zwischengespeichert.
 
 // PRECACHE-START – erzeugt von tools/pwa/build_sw.py, nicht von Hand ändern
-const VERSION = 'e25f30a607cb';
+const VERSION = 'eaec807f3080';
 const FILES = [
   "./",
   "assets/css/fonts.css",
   "assets/css/main.css",
-  "assets/fonts/atkinson-hyperlegible-italic-400-latin-ext.woff2",
-  "assets/fonts/atkinson-hyperlegible-italic-400-latin.woff2",
-  "assets/fonts/atkinson-hyperlegible-normal-400-latin-ext.woff2",
-  "assets/fonts/atkinson-hyperlegible-normal-400-latin.woff2",
-  "assets/fonts/atkinson-hyperlegible-normal-700-latin-ext.woff2",
-  "assets/fonts/atkinson-hyperlegible-normal-700-latin.woff2",
-  "assets/fonts/instrument-serif-italic-400-latin-ext.woff2",
-  "assets/fonts/instrument-serif-italic-400-latin.woff2",
-  "assets/fonts/instrument-serif-normal-400-latin-ext.woff2",
-  "assets/fonts/instrument-serif-normal-400-latin.woff2",
-  "assets/fonts/jetbrains-mono-normal-400-500-latin-ext.woff2",
-  "assets/fonts/jetbrains-mono-normal-400-500-latin.woff2",
+  "assets/fonts/atkinson-hyperlegible-next-italic-300-800-latin-ext.woff2",
+  "assets/fonts/atkinson-hyperlegible-next-italic-300-800-latin.woff2",
+  "assets/fonts/atkinson-hyperlegible-next-normal-300-800-latin-ext.woff2",
+  "assets/fonts/atkinson-hyperlegible-next-normal-300-800-latin.woff2",
+  "assets/fonts/jetbrains-mono-normal-400-600-latin-ext.woff2",
+  "assets/fonts/jetbrains-mono-normal-400-600-latin.woff2",
+  "assets/fonts/newsreader-italic-400-600-latin-ext.woff2",
+  "assets/fonts/newsreader-italic-400-600-latin.woff2",
+  "assets/fonts/newsreader-normal-400-600-latin-ext.woff2",
+  "assets/fonts/newsreader-normal-400-600-latin.woff2",
   "assets/icons/apple-touch-icon.png",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",

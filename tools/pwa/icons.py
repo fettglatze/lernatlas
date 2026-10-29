@@ -1,11 +1,11 @@
-"""Erzeugt die App-Icons (PWA) aus dem Markenzeichen: dunkle Fläche, roter Balken, helles Quadrat.
+"""Erzeugt die App-Icons (PWA) aus dem Markenzeichen: schwarze Fläche, weißer Balken, weißes Quadrat.
 
 Aufruf: python tools/pwa/icons.py  →  assets/icons/*.png
 """
 from pathlib import Path
 from PIL import Image, ImageDraw
 
-INK, SIGNAL, PAPER = '#1b1a17', '#e2552b', '#f3efe6'
+INK, SIGNAL, PAPER = '#111111', '#ffffff', '#ffffff'
 OUT = Path(__file__).resolve().parents[2] / 'assets' / 'icons'
 
 

@@ -15,8 +15,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 FONTS = ROOT / 'assets' / 'fonts'
 CSS = ROOT / 'assets' / 'css' / 'fonts.css'
-URL = ('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400'
-       '&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap')
+# Variable Schriften: ein File je Schnitt deckt den ganzen Stärkebereich ab.
+URL = ('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,300..800;1,300..800'
+       '&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600'
+       '&family=JetBrains+Mono:wght@400..600&display=swap')
+# Lizenztexte aus dem offiziellen Google-Fonts-Repository (Ordner je Familie)
+LICENSES = {'Atkinson Hyperlegible Next': 'atkinsonhyperlegiblenext', 'Newsreader': 'newsreader',
+            'JetBrains Mono': 'jetbrainsmono'}
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
 KEEP = ('latin', 'latin-ext')
 
@@ -44,11 +49,13 @@ def main():
         family = prop['font-family'].strip("'")
         src = re.search(r'url\(([^)]+)\)', prop['src']).group(1)
         key = (family, prop['font-style'], subset, src, prop['unicode-range'])
-        faces.setdefault(key, []).append(int(prop['font-weight']))
+        faces.setdefault(key, []).extend(int(w) for w in prop['font-weight'].split())
 
     FONTS.mkdir(parents=True, exist_ok=True)
-    for old in FONTS.glob('*.woff2'):
+    for old in [*FONTS.glob('*.woff2'), *FONTS.glob('OFL-*.txt')]:
         old.unlink()
+    for folder in LICENSES.values():
+        curl(f'https://raw.githubusercontent.com/google/fonts/main/ofl/{folder}/OFL.txt', FONTS / f'OFL-{folder}.txt')
     out = ['/* Generiert von tools/fonts/fetch_fonts.py – nicht von Hand ändern.',
            '   Lizenz aller Schriften: SIL Open Font License 1.1, Texte in assets/fonts/OFL-*.txt */', '']
     for (family, style, subset, src, unicode_range), weights in faces.items():

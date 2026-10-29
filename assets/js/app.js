@@ -39,7 +39,7 @@ function el(s, { href = `#/fach/${s.id}`, dim = false, tag = 'a' } = {}) {
 
 function topicRow(t, { showSubject = true } = {}) {
   const s = SUBJECT_BY_ID[t.subject];
-  return `<a class="row" href="#/thema/${t.id}" style="--g: var(--g-${s.g})">
+  return `<a class="row" href="#/thema/${t.id}">
     <span class="row__sym">${s.sym}</span>
     <span><span class="row__title">${t.title}</span>${showSubject ? `<span class="row__sub">${s.name} · ${t.area}</span>` : ''}</span>
     ${schoolBadges(t.schools)}
@@ -105,8 +105,8 @@ function viewHome() {
       <div><h2>Das Fächerregister</h2><p>${SUBJECTS.length} Fächer, ${ALL_TOPICS.length} Themen. ${store.school ? `Ausgegraut: nicht an der ${SCHOOLS[store.school].name}.` : 'Wähle oben deine Schulform, um passend zu filtern.'}</p></div>
       <a class="section__more" href="#/faecher">Alle Fächer als Liste →</a>
     </div>
-    <div class="groupkey">${groupsUsed.map(([g, n]) => `<span style="--g: var(--g-${g})"><i></i>${n}</span>`).join('')}</div>
-    <div class="elgrid">${SUBJECTS.map((s) => el(s, { dim: store.school && !s.schools.includes(store.school) })).join('')}</div>
+    ${groupsUsed.map(([g, name]) => `<div class="elgroup"><p class="label">${name}</p>
+      <div class="elgrid">${SUBJECTS.filter((s) => s.g === g).map((s) => el(s, { dim: store.school && !s.schools.includes(store.school) })).join('')}</div></div>`).join('')}
   </div></section>
 
   <section class="section"><div class="wrap">
@@ -129,7 +129,7 @@ function viewHome() {
       <span class="label"><b>03</b> — Ausgearbeitet</span>
       <div><h2>Komplett aufbereitete Themen</h2><p>${featured.length} Themen mit Lernzettel, Merkzettel, Videos, Übungen und Prüfungsbezug. Weitere folgen laufend – alle anderen haben bereits geprüfte Video- und Quellenlinks.</p></div>
     </div>
-    <div class="rows">${bySubject.map(({ s, total, done }) => `<a class="row" href="#/fach/${s.id}?nur=fertig" style="--g: var(--g-${s.g})">
+    <div class="rows">${bySubject.map(({ s, total, done }) => `<a class="row" href="#/fach/${s.id}?nur=fertig">
       <span class="row__sym">${s.sym}</span>
       <span><span class="row__title">${s.name}</span><span class="row__sub">${done} von ${total} Themen ausgearbeitet</span></span>
       <span class="row__k">${Math.round((done / total) * 100)} %</span>
@@ -146,7 +146,7 @@ function viewSubjects() {
       if (!list.length) return '';
       return `<section class="area"><div class="area__head"><h2>${name}</h2><span class="label">${list.length} Fächer</span></div>
         <div class="rows">${list.map((s) => `
-          <a class="row" href="#/fach/${s.id}" style="--g: var(--g-${s.g})">
+          <a class="row" href="#/fach/${s.id}">
             <span class="row__sym">${s.sym}</span>
             <span><span class="row__title">${s.name}</span><span class="row__sub">${s.alt ? s.alt + ' · ' : ''}${s.desc}</span></span>
             ${schoolBadges(s.schools)}
@@ -184,7 +184,7 @@ function viewSubject(id, params) {
         <section class="area" id="area-${i}">
           <div class="area__head"><h2>${a.name}</h2><span class="label">${a.topics.length} Themen</span></div>
           <div class="rows">${a.topics.map((t) => `
-            <a class="row" href="#/thema/${t.id}" style="--g: var(--g-${s.g})">
+            <a class="row" href="#/thema/${t.id}">
               <span class="row__sym">${s.sym}</span>
               <span><span class="row__title">${t.title}</span><span class="row__sub">${kLabel(t.k)}</span></span>
               ${schoolBadges(t.schools)}
@@ -283,7 +283,7 @@ function viewTopic(id, params) {
     lead: c ? c.summary : `Thema im Fach ${s.name}, ${kLabel(t.k)}.`,
     meta: metaItem('Fach', `<a href="#/fach/${s.id}">${s.name}</a>`) + metaItem('Stufe', kLabel(t.k)) + metaItem('Schulformen', schoolBadges(t.schools)) + landNameMeta(s) + metaItem('Status', status(!!c)),
   }) + `
-  <div class="tabs"><div class="wrap tabs__inner" role="tablist">
+  <div class="tabs"><div class="wrap tabs__inner" role="tablist"><span class="tabs__ink" aria-hidden="true"></span>
     ${tabs.map(([k, label, n]) => `<button class="tab" role="tab" id="tab-${k}" aria-controls="panel-${k}" tabindex="${k === active ? 0 : -1}" data-tab="${k}" aria-selected="${k === active}">${label}${n ? ` <span class="tab__n">${n}</span>` : ''}</button>`).join('')}
   </div></div>
   <div class="wrap topicbody" data-topic="${id}">
@@ -362,7 +362,7 @@ function mountPractice(examId) {
     const key = practiceKey(set), total = practiceCount(set);
     const update = () => {
       const solved = Object.values(store.progressOf(key)).filter((v) => v === true).length;
-      root.querySelector('[data-bar]').style.width = `${Math.round((solved / total) * 100)}%`;
+      root.querySelector('[data-bar]').style.setProperty('--p', solved / total);
       root.querySelector('[data-score]').textContent = `${solved}/${total}`;
     };
     let n = 0;
@@ -659,6 +659,7 @@ function route() {
   else html = viewNotFound();
 
   main.innerHTML = html;
+  if (path !== lastPath) { main.classList.remove('is-enter'); void main.offsetWidth; main.classList.add('is-enter'); }
   document.title = title;
   document.querySelectorAll('[data-nav]').forEach((n) => n.classList.toggle('is-active', n.dataset.nav === a || (a === 'fach' && n.dataset.nav === 'faecher') || (a === 'pruefung' && n.dataset.nav === 'pruefungen')));
   if (path !== lastPath) {
@@ -668,7 +669,7 @@ function route() {
   lastPath = path;
   setMenu(false);
 
-  if (a === 'thema') mountTopic(b);
+  if (a === 'thema') { mountTopic(b); moveInk(); }
   if (a === 'pruefung') mountPractice(b);
   if (a === 'karten') mountCards();
 }
@@ -718,7 +719,7 @@ function examCard(x) {
       <div><p class="label">${s.name} · ${longDate(x.date)}</p><h2>${examTitle(x)}</h2></div>
       <div class="countdown">${plan.days < 0 ? '<strong class="countdown__n">–</strong><span>Prüfung vorbei</span>' : countdown(plan.days)}</div>
     </div>
-    <div class="scoreline"><span class="label">Themen erledigt</span><strong>${done}/${topics.length}</strong><div class="progress"><i style="width:${pct}%"></i></div></div>
+    <div class="scoreline"><span class="label">Themen erledigt</span><strong>${done}/${topics.length}</strong><div class="progress"><i style="--p:${pct / 100}"></i></div></div>
     ${!topics.length ? '<p class="muted">Noch keine Themen ausgewählt. Wähle unten die Themen, die in der Prüfung drankommen.</p>'
       : plan.days < 0 ? '' : `
       ${plan.blocks.map((b, i) => `<div class="planweek${i === 0 ? ' is-now' : ''}">
@@ -896,6 +897,7 @@ function cardAction(kind) {
   const shown = !root.querySelector('[data-back]').hidden;
   if (kind === 'show' && !shown) {
     root.querySelector('[data-back]').hidden = false;
+    root.querySelector('.flash').classList.add('is-turned');
     root.querySelector('[data-card="show"]').hidden = true;
     root.querySelectorAll('[data-card="again"], [data-card="known"]').forEach((b) => { b.hidden = false; });
     root.querySelector('[data-card="known"]').focus({ preventScroll: true });
@@ -929,7 +931,7 @@ function mountTopic(id) {
     const p = store.progressOf(id);
     const solved = Object.values(p).filter((v) => v === true).length;
     const pct = Math.round((solved / c.exercises.length) * 100);
-    document.querySelectorAll('[data-bar]').forEach((b) => { b.style.width = `${pct}%`; });
+    document.querySelectorAll('[data-bar]').forEach((b) => { b.style.setProperty('--p', pct / 100); });
     const sc = $('[data-score]'); if (sc) sc.textContent = `${solved}/${c.exercises.length}`;
     const st = $('[data-score-text]'); if (st) st.textContent = `${solved} von ${c.exercises.length} Übungen gelöst`;
   };
@@ -937,11 +939,27 @@ function mountTopic(id) {
   update();
 }
 
+// Schiebt die schwarze Pille unter den aktiven Reiter (nur transform/width, siehe .tabs__ink).
+function moveInk() {
+  const ink = $('.tabs__ink'), tab = $('.tab[aria-selected="true"]');
+  if (!ink || !tab) return;
+  const bar = ink.closest('.tabs');
+  const first = !bar.classList.contains('has-ink');
+  if (first) ink.style.transition = 'none';   // beim Laden nicht hereinfahren, nur beim Wechsel gleiten
+  ink.style.width = `${tab.offsetWidth}px`;
+  ink.style.setProperty('--x', `${tab.offsetLeft}px`);
+  bar.classList.add('has-ink');
+  if (first) { void ink.offsetWidth; ink.style.transition = ''; }
+}
+window.addEventListener('resize', moveInk);
+document.fonts?.ready.then(moveInk);
+
 function selectTab(key) {
   const tabs = document.querySelectorAll('[data-tab]');
   if (![...tabs].some((t) => t.dataset.tab === key)) return;
   tabs.forEach((t) => { t.setAttribute('aria-selected', String(t.dataset.tab === key)); t.tabIndex = t.dataset.tab === key ? 0 : -1; });
   document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== key; });
+  moveInk();
   const { parts } = parseHash();
   history.replaceState(null, '', `#/${parts.join('/')}?tab=${key}`);
   const bar = $('.tabs');
@@ -980,7 +998,7 @@ function renderHits() {
   }
   dlgResults.innerHTML =
     (subjects.length ? `<div class="hit__group label">Fächer</div>${subjects.slice(0, 3).map((s) => `
-      <a class="hit" href="#/fach/${s.id}"><span class="row__sym" style="color:var(--g-${s.g})">${s.sym}</span><span><span class="hit__title">${highlight(s.name, q)}</span><span class="hit__meta">${countTopics(s)} Themen</span></span><span></span></a>`).join('')}` : '') +
+      <a class="hit" href="#/fach/${s.id}"><span class="row__sym">${s.sym}</span><span><span class="hit__title">${highlight(s.name, q)}</span><span class="hit__meta">${countTopics(s)} Themen</span></span><span></span></a>`).join('')}` : '') +
     (topics.length ? `<div class="hit__group label">Themen</div>${topics.map((r) => hitHtml(r.topic, q, r.fits)).join('')}
       <a class="hit" href="#/suche?q=${encodeURIComponent(q)}"><span></span><span class="hit__title">Alle Ergebnisse anzeigen →</span><span></span></a>` : '');
   const n = topics.length + Math.min(subjects.length, 3);
@@ -990,7 +1008,7 @@ function renderHits() {
 function hitHtml(t, q, fits = true) {
   const s = SUBJECT_BY_ID[t.subject];
   return `<a class="hit" href="#/thema/${t.id}" ${fits ? '' : 'style="opacity:.6"'}>
-    <span class="row__sym" style="color:var(--g-${s.g})">${s.sym}</span>
+    <span class="row__sym">${s.sym}</span>
     <span><span class="hit__title">${highlight(t.title, q)}</span><span class="hit__meta">${s.name} · ${kLabel(t.k)}${fits ? '' : ' · andere Schulform'}</span></span>
     ${status(!!CONTENT[t.id])}
   </a>`;

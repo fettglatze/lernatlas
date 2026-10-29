@@ -75,9 +75,32 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
 
 Nebenbei: **Menü für schmale Bildschirme**. Unter 960 px öffnet ein Menü-Knopf in der Kopfzeile die Navigation als Liste. Es schließt per Link, Escape oder Klick daneben, und `aria-expanded` wird mitgeführt. Unter 420 px wandert der Hell/Dunkel-Schalter ins Menü, damit die Kopfzeile auf das Handy passt.
 
+## Redesign Schwarz-Weiß ✅ (29.10.2026)
+
+Nur das Aussehen ist neu, Inhalte, Daten und Funktionen sind unverändert.
+- **Farbe:** streng monochrom mit neutralen Grautönen als Tokens (`--bg`, `--surface`, `--text`, `--muted` …), Hell und Dunkel. Akzente entstehen durch Umkehrung: Buttons, aktiver Reiter, gewählte Schulform und der Footer sind schwarz mit weißer Schrift. Fachfarben und Orange sind entfernt, auch im Favicon und in den App-Icons.
+- **Bedeutung ohne Farbe:** Richtig ist durchgezogen und hat ✓, falsch ist gestrichelt und hat ✕. Die Zugangs-Plaketten unterscheiden sich durch Form und Symbol: Frei gefüllt mit Haken, Login als Umriss mit Schloss, Beispiele gepunktet, Überblick als Fläche mit i.
+- **Schrift:** Atkinson Hyperlegible Next für Text und Bedienung (Lesbarkeit, Leseschwäche), Newsreader für Überschriften (optische Größen), JetBrains Mono für Kürzel. Fließtext 18 px, Zeilenhöhe 1,65, Lesebreite höchstens 68 Zeichen, nichts unter 14 px.
+- **Ordnung:** 4-px-Raster, Radien 12 px, Pillen-Buttons. Die Fächer auf der Startseite sind nach Fachgruppen sortiert, die Schulformen stehen als Liste. Kopfzeile und Reiterleiste sind durchscheinend und bleiben oben.
+- **Animationen** (nur `transform` und `opacity`, 150–300 ms):
+  - Seitenwechsel und Reiterinhalt blenden ein.
+  - Listen und Kacheln erscheinen gestaffelt.
+  - Die Reiter-Pille gleitet zum aktiven Reiter.
+  - Karten heben sich beim Hover.
+  - Rückmeldungen ploppen kurz auf.
+  - Die Karteikarte kippt beim Aufdecken, und die Rückseite gleitet ein.
+  - Fortschrittsbalken wachsen über `scaleX`.
+  - Bei „Bewegung reduzieren“ bleibt nur kurzes Überblenden.
+- **Geprüft** mit eigenen Skripten (`dist/audit.js`, nicht im Repo):
+  - 20 Seitenzustände ohne seitliches Scrollen bei 1280, 1024, 768, 375 und 320 px.
+  - Kontrast in Hell und Dunkel ohne Fehler, keine Schrift unter 14 px.
+  - Klickflächen mindestens 24 px.
+  - Fokusrahmen bei Tastaturbedienung sichtbar.
+  - Keine Konsolenfehler.
+
 ## Vor dem Livegang (Pflicht)
 
-- [x] **Schriften lokal hosten** statt über Google Fonts. Das LG München hat Google-Fonts-Einbindungen 2022 als DSGVO-Verstoß gewertet. Erledigt am 29.10.2026: Atkinson Hyperlegible, Instrument Serif und JetBrains Mono liegen als woff2 in `assets/fonts/` (nur latin und latin-ext, 12 Dateien, ca. 190 KB) samt Lizenztexten (SIL OFL 1.1). `assets/css/fonts.css` erzeugt `python tools/fonts/fetch_fonts.py`. Die Seite fragt bei keinem fremden Server mehr an, außer bei eingebetteten Videos und externen Links. Die Schriften sind auch offline im Cache.
+- [x] **Schriften lokal hosten** statt über Google Fonts. Das LG München hat Google-Fonts-Einbindungen 2022 als DSGVO-Verstoß gewertet. Erledigt am 29.10.2026: Die Schriften liegen als woff2 in `assets/fonts/` (nur latin und latin-ext; seit dem Redesign Atkinson Hyperlegible Next, Newsreader und JetBrains Mono als variable Schriften, 10 Dateien, ca. 600 KB) samt Lizenztexten (SIL OFL 1.1). `assets/css/fonts.css` erzeugt `python tools/fonts/fetch_fonts.py`. Die Seite fragt bei keinem fremden Server mehr an, außer bei eingebetteten Videos und externen Links. Die Schriften sind auch offline im Cache.
 - [ ] **Impressum** (§ 5 DDG) und **Datenschutzerklärung**. Vorlage steht seit 29.10.2026 (Seiten `#/impressum` und `#/datenschutz`, Footer-Links). Sie beschreibt nur, was die Seite tatsächlich tut: keine Cookies, localStorage und Offline-Cache nach § 25 Abs. 2 Nr. 2 TDDDG, YouTube erst nach Klick über youtube-nocookie.com, Server-Logs beim Hoster. Auf der Datenschutzseite gibt es einen Knopf, der alle lokalen Daten löscht.
   - **Offen:** In `data/legal.js` Name, ladungsfähige Anschrift, E-Mail und den Hoster eintragen. Solange etwas fehlt, zeigen beide Seiten einen Entwurfs-Hinweis.
   - Texte vor dem Livegang rechtlich prüfen lassen, sie sind keine Rechtsberatung.
