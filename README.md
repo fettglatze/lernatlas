@@ -21,9 +21,11 @@ lernatlas/
 ├── assets/js/
 │   ├── app.js               Router (#/…), alle Ansichten, globale Events
 │   ├── search.js            Suche (umlaut- und tippfehlertolerant)
-│   ├── exercise.js          Übungs-Engine (choice, number, numbers, text)
+│   ├── cards.js             Karteikarten: Lernkartei nach Leitner, Fälligkeiten
+│   ├── plan.js              Lernplan: Wochenplan bis zum Prüfungstermin
+│   ├── exercise.js          Übungs-Engine (choice, number, numbers, text, match, cloze, order, Graph)
 │   ├── render.js            Lernzettel-Blöcke → HTML
-│   └── store.js             Schulform, Bundesland, Fortschritt (localStorage)
+│   └── store.js             Schulform, Bundesland, Fortschritt, Karteikarten, Prüfungstermine (localStorage)
 ├── tools/exams/deeplinks.py erzeugt data/exam-files.js (direkte Links auf Länder-PDFs)
 ├── tools/linkcheck.py       prüft alle Links in data/ (monatlich: python tools/linkcheck.py)
 ├── tools/videos/            Skripte zum Kuratieren und Prüfen von Videos (Python)
@@ -33,11 +35,14 @@ lernatlas/
     ├── exam-files.js        generiert: direkte Prüfungs-PDFs je Land/Fach/Jahr
     ├── exam-pages.js        Prüfungsseiten: Aufbau, Dauer, Hilfsmittel (amtliche Quellen)
     ├── exam-practice.js     eigene Übungssätze im Prüfungsstil zu den Prüfungsseiten
+    ├── abi-focus.js         Abitur Deutsch: Lektüren und Themenfelder (IQB-Pool und Landesvorgaben)
+    ├── land-info.js         je Land: Weg zum Abitur am Gymnasium, Fachname Ethik
     ├── sources.js           Videokanäle und Nachschlagewerke je Fach
     └── content/             Ausgearbeitete Themen (Lernzettel, Merkzettel, Übungen)
         ├── index.js         führt alle Inhaltsdateien zusammen
         ├── videos.js        geprüfte YouTube-Videos je Thema (Phase 3)
-        ├── _helpers.js      Kurzschreibweisen ch(), num(), nums(), txt(), EX
+        ├── _helpers.js      Kurzschreibweisen ch(), num(), nums(), txt(), match(), cloze(), order(), plot(), EX
+        ├── aufgabentypen.js Aufgaben der Typen Zuordnen, Lückentext, Reihenfolge, Graph ablesen
         ├── mathe-*.js       zahlen, algebra, geometrie, daten, analysis, oberstufe (+ mathe.js)
         ├── deutsch-*.js     sprache, texte, abitur (Epochen, Sprachwandel)
         ├── englisch-*.js    grammar, skills, abitur (+ sprachen.js aus Phase 1)

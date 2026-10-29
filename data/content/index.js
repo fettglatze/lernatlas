@@ -33,6 +33,7 @@ import musisch from './musisch.js';
 import praxis from './praxis.js';
 import paedagogikPsychologie from './paedagogik-psychologie.js';
 import videos from './videos.js';
+import aufgabentypen from './aufgabentypen.js';
 
 export const CONTENT = {
   ...mathe, ...matheZahlen, ...matheAlgebra, ...matheGeometrie, ...matheDaten, ...matheAnalysis, ...matheOberstufe,
@@ -42,6 +43,12 @@ export const CONTENT = {
   ...gesellschaft, ...geschichte, ...politik, ...erdkunde, ...wirtschaft,
   ...franzoesisch, ...spanisch, ...latein, ...informatik, ...werte, ...musisch, ...praxis, ...paedagogikPsychologie,
 };
+
+// Aufgaben der Typen Zuordnen, Lückentext, Reihenfolge und Graph ablesen hinten anhängen,
+// damit die Nummern (und damit der gespeicherte Fortschritt) der bestehenden Aufgaben gleich bleiben
+for (const [id, list] of Object.entries(aufgabentypen)) {
+  if (CONTENT[id]) CONTENT[id].exercises = [...CONTENT[id].exercises, ...list];
+}
 
 // Gesichtete Videos (videos.js) an die Themen hängen
 for (const [id, list] of Object.entries(videos)) {

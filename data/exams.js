@@ -7,6 +7,7 @@
 //   beispiel  – Muster-/Beispielaufgaben bzw. nur einzelne Fächer
 //   info      – Informationsseite / Wegweiser
 // Stand der Prüfung der Links: Oktober 2026 (Quelle u. a. Deutscher Bildungsserver).
+// curriculum: offizielles Lehrplanportal des Landes (für den Bundesland-Modus).
 
 export const LEVELS = {
   esa: { name: 'Erster Schulabschluss', short: 'ESA', school: 'hs', desc: 'Hauptschulabschluss, Quali, Berufsreife, BBR' },
@@ -47,6 +48,7 @@ const BS = (id) => `https://www.bildungsserver.de/onlineressource.html?onlineres
 
 export const LANDS = [
   { code: 'BW', name: 'Baden-Württemberg',
+    curriculum: { name: 'Bildungspläne Baden-Württemberg', url: 'https://www.bildungsplaene-bw.de/' },
     names: { esa: 'Hauptschulabschluss (Werkrealschule)', msa: 'Realschulabschluss', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Bildungsserver: Abiturvorbereitung Baden-Württemberg', access: 'info',
@@ -57,6 +59,7 @@ export const LANDS = [
         url: 'https://www.mathe-aufgaben.com/pruefungsaufgaben/abitur/allg-gymnasien/allg-gymnasien-abiturpruefung-leistungsfach/' },
     ] },
   { code: 'BY', name: 'Bayern',
+    curriculum: { name: 'LehrplanPLUS Bayern', url: 'https://www.lehrplanplus.bayern.de/' },
     names: { esa: 'Qualifizierender Abschluss (Quali)', msa: 'Mittlerer Schulabschluss / Realschulabschluss', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'ISB – Abiturprüfungen Gymnasium', access: 'frei',
@@ -77,6 +80,7 @@ export const LANDS = [
         url: 'https://pruefungsarchiv.mebis.bycs.de/archiv.php' },
     ] },
   { code: 'BE', name: 'Berlin',
+    curriculum: { name: 'Rahmenlehrpläne Berlin-Brandenburg', url: 'https://bildungsserver.berlin-brandenburg.de/unterricht/rahmenlehrplaene/' },
     names: { esa: 'Berufsbildungsreife (BBR/eBBR)', msa: 'Mittlerer Schulabschluss (MSA)', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'IQB – Mathematik-Abitur Berlin/Brandenburg', access: 'frei',
@@ -90,6 +94,7 @@ export const LANDS = [
         url: BS(66780) },
     ] },
   { code: 'BB', name: 'Brandenburg',
+    curriculum: { name: 'Rahmenlehrpläne Berlin-Brandenburg', url: 'https://bildungsserver.berlin-brandenburg.de/unterricht/rahmenlehrplaene/' },
     names: { esa: 'Erweiterte Berufsbildungsreife (eBBR)', msa: 'Fachoberschulreife (FOR)', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'IQB – Mathematik-Abitur Berlin/Brandenburg', access: 'frei',
@@ -99,6 +104,7 @@ export const LANDS = [
         desc: 'Gemeinsame Prüfung seit 2013/14. Originalprüfungen nur über die Schule.', url: BS(66780) },
     ] },
   { code: 'HB', name: 'Bremen',
+    curriculum: { name: 'Bildungspläne Bremen (LIS)', url: 'https://www.lis.bremen.de/schulqualitaet/bildungsplaene-21942' },
     names: { esa: 'Erweiterte Berufsbildungsreife', msa: 'Mittlerer Schulabschluss', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Bremen – Prüfungsunterlagen', access: 'frei',
@@ -106,6 +112,7 @@ export const LANDS = [
         url: 'https://www.bildung.bremen.de/prufungsunterlagen-226880' },
     ] },
   { code: 'HH', name: 'Hamburg',
+    curriculum: { name: 'Bildungspläne Hamburg', url: 'https://www.hamburg.de/politik-und-verwaltung/behoerden/bsfb/veroeffentlichungen/bildungsplaene' },
     names: { esa: 'Erster allgemeinbildender Schulabschluss (ESA)', msa: 'Mittlerer Schulabschluss (MSA)', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Bildungsserver Hamburg – Zentralabitur', access: 'beispiel',
@@ -113,6 +120,7 @@ export const LANDS = [
         url: 'https://bildungsserver.hamburg.de/schule/schulabschluesse/zentralabitur' },
     ] },
   { code: 'HE', name: 'Hessen',
+    curriculum: { name: 'Kerncurricula und Lehrpläne Hessen', url: 'https://kultus.hessen.de/unterricht/kerncurricula-und-lehrplaene' },
     names: { esa: 'Hauptschulabschluss', msa: 'Realschulabschluss', abi: 'Landesabitur' },
     links: [
       { level: 'abi', title: 'Hessen – Lernarchiv Sekundarstufe', access: 'login',
@@ -123,6 +131,8 @@ export const LANDS = [
         url: 'https://www.bildungsserver.de/schule/pruefungsvorbereitung-abitur-hessen-13164-de.html' },
     ] },
   { code: 'MV', name: 'Mecklenburg-Vorpommern',
+    // bildung-mv.de war im Oktober 2026 von außerhalb teils nicht erreichbar (Adresse laut Deutschem Bildungsserver).
+    curriculum: { name: 'Rahmenpläne Mecklenburg-Vorpommern', url: 'https://www.bildung-mv.de/schueler/schule-und-unterricht/faecher-und-rahmenplaene/rahmenplaene-an-allgemeinbildenden-schulen/' },
     names: { esa: 'Berufsreife', msa: 'Mittlere Reife', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Bildung MV – Prüfungsvorbereitung', access: 'frei',
@@ -137,6 +147,7 @@ export const LANDS = [
         url: BS(65165) },
     ] },
   { code: 'NI', name: 'Niedersachsen',
+    curriculum: { name: 'Curriculare Vorgaben Niedersachsen', url: 'https://cuvo.nibis.de/' },
     names: { esa: 'Hauptschulabschluss', msa: 'Realschulabschluss / Sek-I-Abschluss', abi: 'Zentralabitur' },
     links: [
       { level: 'abi', title: 'Bildungsportal Niedersachsen – Zentralabitur', access: 'beispiel',
@@ -146,6 +157,7 @@ export const LANDS = [
         desc: 'Informationen und Beispielaufgaben zu den Abschlussarbeiten.', url: BS(66681) },
     ] },
   { code: 'NW', name: 'Nordrhein-Westfalen',
+    curriculum: { name: 'Lehrplannavigator NRW', url: 'https://lehrplannavigator.nrw.de/' },
     names: { esa: 'Erster Schulabschluss (ESA)', msa: 'Mittlerer Schulabschluss (ZP10)', abi: 'Zentralabitur' },
     links: [
       { level: 'abi', title: 'Standardsicherung NRW – Prüfungsaufgaben Zentralabitur', access: 'login',
@@ -158,14 +170,17 @@ export const LANDS = [
         desc: 'Erster und Mittlerer Schulabschluss im Überblick.', url: BS(66873) },
     ] },
   { code: 'RP', name: 'Rheinland-Pfalz',
+    curriculum: { name: 'Lehrpläne Rheinland-Pfalz', url: 'https://bildung.rlp.de/lehrplaene' },
     names: { esa: 'Berufsreife', msa: 'Qualifizierter Sekundarabschluss I', abi: 'Abitur (dezentral)' },
     note: 'In Rheinland-Pfalz wird das Abitur dezentral gestellt: Die Aufgaben entwirft die eigene Schule. Es gibt daher kein landesweites Archiv – nutzt die IQB-Aufgaben und eure Lehrkräfte.',
     links: [] },
   { code: 'SL', name: 'Saarland',
+    curriculum: { name: 'Lehrpläne Saarland', url: 'https://www.saarland.de/mbk/DE/portale/bildungsserver/schulen-und-bildungswege/lehrplaene/lehrplaene.allgemeinbildende' },
     names: { esa: 'Hauptschulabschluss', msa: 'Mittlerer Bildungsabschluss', abi: 'Abitur' },
     note: 'Für das Saarland ist uns derzeit kein öffentliches Aufgabenarchiv bekannt. Nutzt die bundesweiten IQB-Aufgaben.',
     links: [] },
   { code: 'SN', name: 'Sachsen',
+    curriculum: { name: 'Sächsische Lehrplan-Datenbank', url: 'https://www.schulportal.sachsen.de/lplandb/' },
     names: { esa: 'Hauptschulabschluss', msa: 'Realschulabschluss (Oberschule)', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Schule in Sachsen – Prüfungsaufgaben', access: 'login',
@@ -175,6 +190,7 @@ export const LANDS = [
         desc: 'Informationen und Übungsmaterial.', url: BS(66682) },
     ] },
   { code: 'ST', name: 'Sachsen-Anhalt',
+    curriculum: { name: 'Lehrpläne Sachsen-Anhalt (LISA)', url: 'https://lisa.sachsen-anhalt.de/schulqualitaet/lehrplaene-rahmenrichtlinien' },
     names: { esa: 'Hauptschulabschluss', msa: 'Realschulabschluss', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Bildungsserver LSA – Abiturprüfung', access: 'frei',
@@ -182,6 +198,7 @@ export const LANDS = [
         url: 'https://www.bildung-lsa.de/informationsportal/unterricht/gymnasium/schulformbezogene_informationen/abiturpruefung.htm' },
     ] },
   { code: 'SH', name: 'Schleswig-Holstein',
+    curriculum: { name: 'Fachanforderungen Schleswig-Holstein', url: 'https://fachportal.lernnetz.de/sh/fachanforderungen.html' },
     names: { esa: 'Erster allgemeinbildender Schulabschluss (ESA)', msa: 'Mittlerer Schulabschluss (MSA)', abi: 'Abitur' },
     links: [
       { level: 'abi', title: 'Land SH – Zentrale Abschlüsse: Prüfungsaufgaben', access: 'beispiel',
@@ -189,6 +206,7 @@ export const LANDS = [
         url: 'https://www.schleswig-holstein.de/DE/fachinhalte/Z/zentrale_abschluesse/downloads/2026_Abitur_allgembild_Pruefaufgaben' },
     ] },
   { code: 'TH', name: 'Thüringen',
+    curriculum: { name: 'Thüringer Lehrpläne', url: 'https://www.schulportal-thueringen.de/lehrplaene' },
     names: { esa: 'Hauptschulabschluss', msa: 'Realschulabschluss', abi: 'Abitur' },
     links: [
       { level: 'msa', title: 'Thüringer Schulportal – Beispielaufgaben Realschulabschluss Mathe', access: 'beispiel',

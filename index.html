@@ -25,6 +25,8 @@
       <nav class="mainnav" aria-label="Hauptnavigation">
         <a href="#/faecher" data-nav="faecher">Fächer</a>
         <a href="#/pruefungen" data-nav="pruefungen">Prüfungen</a>
+        <a href="#/karten" data-nav="karten">Karten</a>
+        <a href="#/plan" data-nav="plan">Lernplan</a>
         <a href="#/quellen" data-nav="quellen">Quellen</a>
       </nav>
       <div class="topbar__tools">
@@ -40,6 +42,12 @@
             <option value="hs">Hauptschule</option>
             <option value="rs">Realschule</option>
             <option value="gym">Gymnasium</option>
+          </select>
+        </label>
+        <label class="schoolpick">
+          <span class="visually-hidden">Bundesland</span>
+          <select data-action="land" aria-label="Bundesland wählen">
+            <option value="">Alle Länder</option>
           </select>
         </label>
         <button class="iconbtn" type="button" data-action="theme" aria-label="Hell/Dunkel umschalten">
@@ -60,6 +68,8 @@
       <nav aria-label="Fußzeile" class="footer__nav">
         <a href="#/faecher">Alle Fächer</a>
         <a href="#/pruefungen">Prüfungsarchiv</a>
+        <a href="#/karten">Karteikarten</a>
+        <a href="#/plan">Lernplan</a>
         <a href="#/quellen">Quellen &amp; Methodik</a>
       </nav>
     </div>

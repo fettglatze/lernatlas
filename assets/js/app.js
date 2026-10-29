@@ -5,11 +5,15 @@ import { LANDS, NATIONAL, LEVELS } from '../../data/exams.js';
 import { EXAM_FILES } from '../../data/exam-files.js';
 import { EXAM_PAGES, EXAM_PAGE_BY_ID } from '../../data/exam-pages.js';
 import { PRACTICE } from '../../data/exam-practice.js';
+import { IQB_DEUTSCH, ABI_FOCUS } from '../../data/abi-focus.js';
+import { LAND_INFO, ETHIK_SOURCE } from '../../data/land-info.js';
 import { videoLinks, referenceLinks, CURRICULA, LEARNING_SOURCES } from '../../data/sources.js';
 import { store } from './store.js';
 import { search, highlight, escapeHtml } from './search.js';
 import { renderBlocks } from './render.js';
 import { renderExercise } from './exercise.js';
+import { cardId, isDue, rate, startedTopics, deckStats, nextDue, today, INTERVALS, MAX_BOX } from './cards.js';
+import { daysUntil, buildPlan } from './plan.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -163,7 +167,7 @@ function viewSubject(id, params) {
     side: el(s, { tag: 'div' }),
     title: s.name,
     lead: `${s.alt ? `<span class="muted">auch: ${s.alt}.</span> ` : ''}${s.desc}`,
-    meta: metaItem('Themen', countTopics(s)) + metaItem('Ausgearbeitet', countFull(s)) + metaItem('Schulformen', s.schools.map((x) => SCHOOLS[x].name).join(', ')),
+    meta: metaItem('Themen', countTopics(s)) + metaItem('Ausgearbeitet', countFull(s)) + metaItem('Schulformen', s.schools.map((x) => SCHOOLS[x].name).join(', ')) + landNameMeta(s),
   }) + `
   <div class="wrap layout2">
     <nav class="toc" aria-label="Bereiche"><p class="label">Bereiche</p>
@@ -212,7 +216,7 @@ function viewTopic(id, params) {
         <div class="memo__head"><h2>${t.title}</h2><span class="label">${s.sym} · ${kLabel(t.k)}</span></div>
         <dl>${c.merkzettel.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
       </div>
-      <div class="actions"><button class="btn" data-action="print">Merkzettel drucken</button><button class="btn btn--ghost" data-tab-go="uebungen">Wissen testen →</button></div>`,
+      <div class="actions"><a class="btn" href="#/karten/${id}">Als Karteikarten lernen${cardHint(id, c)}</a><button class="btn btn--ghost" data-action="print">Merkzettel drucken</button><button class="btn btn--ghost" data-tab-go="uebungen">Wissen testen →</button></div>`,
     uebungen: () => `<div class="scoreline"><span class="label">Fortschritt</span><strong data-score>0/${c.exercises.length}</strong><div class="progress"><i data-bar></i></div><button class="chip" data-action="reset">Zurücksetzen</button></div><div data-exercises></div>`,
     ueberblick: () => `<div class="pending">
         <p class="label"><b>●</b> In Bearbeitung</p>
@@ -244,7 +248,12 @@ function viewTopic(id, params) {
       const pages = EXAM_PAGES.filter((p) => p.subject === s.id && p.levels.some((l) => levels.includes(l)) && (!land || p.land === land.code));
       return `<div class="prose" style="max-width:none">
         ${c?.exam ? `<h2>Prüfungsbezug</h2><p>${c.exam}</p>` : `<h2>Prüfungsbezug</h2><p>Das Thema ist relevant für: ${levels.map((l) => LEVELS[l].name).join(', ')}.</p>`}
+        ${land ? `<p class="muted">In ${land.name} heißen die Abschlüsse: ${levels.map((l) => `<strong>${land.names[l]}</strong>`).join(', ')}.</p>` : ''}
+        ${land && levels.includes('abi') ? `<h2>Weg zum Abitur in ${land.name}</h2>${gymInfo(land.code)}` : ''}
         ${pages.length ? `<h2>So läuft die Prüfung ab</h2><div>${pages.map(examPageRow).join('')}</div>` : ''}
+        ${s.id === 'deutsch' && levels.includes('abi') ? `<h2>Abitur: Lektüren und Themenfelder</h2>
+          <p>${land && abiFocusOf(land.code).length ? `Für ${land.name} erfasst: ${abiFocusOf(land.code).map((f) => f.title).join(', ')}.` : 'Verbindliche Lektüren und Themenfelder des gemeinsamen Abituraufgabenpools, dazu Landesvorgaben.'}</p>
+          <div>${abiFocusRow()}</div>` : ''}
         <h2>Originalaufgaben ${land ? `in ${land.name}` : ''}</h2>
         ${land ? '' : `<p>Wähle dein Bundesland, um die passenden Prüfungsarchive zu sehen: <a href="#/pruefungen">Bundesland wählen →</a></p>`}
         ${landLinks.length ? `<div>${landLinks.map(examRow).join('')}</div>` : land ? `<p class="muted">Für ${land.name} ist uns zu diesem Abschluss kein öffentliches Archiv bekannt.</p>` : ''}
@@ -262,6 +271,7 @@ function viewTopic(id, params) {
           ${referenceLinks(t, s, c?.videoQuery).map((r) => `<a class="linkcard" href="${r.url}" target="_blank" rel="noopener"><span class="label">Nachschlagen</span><strong>${r.name}</strong><span>${r.desc}</span><span class="linkcard__go">„${t.title}“ suchen ↗</span></a>`).join('')}
         </div>
         <h2>Lehrplan</h2>
+        ${landNow() ? `<p>Wo das Thema in deinem Bundesland steht, findest du im offiziellen Lehrplanportal: <a href="${landNow().curriculum.url}" target="_blank" rel="noopener">${landNow().curriculum.name} ↗</a> – dort das Fach ${s.name} und deine Schulform wählen.</p>` : `<p>Wähle oben dein Bundesland, dann erscheint hier der Link zum Lehrplan deines Landes.</p>`}
         <p>Das Thema ist in den Bildungsstandards der KMK bzw. in den Lehrplänen der Länder verankert. Wie Inhalte geprüft werden, steht unter <a href="#/quellen">Quellen &amp; Methodik</a>.</p>
       </div>`,
   };
@@ -270,7 +280,7 @@ function viewTopic(id, params) {
     crumbs: [['Fächer', '#/faecher'], [s.name, `#/fach/${s.id}`], [t.area]],
     title: t.title,
     lead: c ? c.summary : `Thema im Fach ${s.name}, ${kLabel(t.k)}.`,
-    meta: metaItem('Fach', `<a href="#/fach/${s.id}">${s.name}</a>`) + metaItem('Stufe', kLabel(t.k)) + metaItem('Schulformen', schoolBadges(t.schools)) + metaItem('Status', status(!!c)),
+    meta: metaItem('Fach', `<a href="#/fach/${s.id}">${s.name}</a>`) + metaItem('Stufe', kLabel(t.k)) + metaItem('Schulformen', schoolBadges(t.schools)) + landNameMeta(s) + metaItem('Status', status(!!c)),
   }) + `
   <div class="tabs"><div class="wrap tabs__inner" role="tablist">
     ${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${k === active}">${label}${n ? ` <span class="tab__n">${n}</span>` : ''}</button>`).join('')}
@@ -279,10 +289,25 @@ function viewTopic(id, params) {
     <div>${tabs.map(([k]) => `<section class="panel" role="tabpanel" data-panel="${k}" ${k === active ? '' : 'hidden'}>${panels[k]()}</section>`).join('')}</div>
     <aside class="aside">
       ${c ? `<div class="aside__box"><span class="label">Dein Stand</span><div class="progress"><i data-bar></i></div><p class="muted" style="font-size:14px;margin:8px 0 0" data-score-text></p></div>` : ''}
+      ${upcoming().filter((x) => x.topics.includes(id)).map((x) => `<div class="aside__box"><span class="label">Lernplan</span><p style="margin:4px 0 0"><a href="#/plan">${examTitle(x)}</a><br><span class="muted" style="font-size:14px">${daysUntil(x.date) === 0 ? 'heute' : `in ${daysUntil(x.date)} ${daysUntil(x.date) === 1 ? 'Tag' : 'Tagen'}`}${topicDone(id) ? ' · Thema erledigt' : ''}</span></p></div>`).join('')}
       <div class="aside__box"><span class="label">Im selben Bereich</span><ul>${siblings.slice(0, 8).map((x) => `<li><a href="#/thema/${x.id}">${x.title}</a>${CONTENT[x.id] ? ' <span class="status status--full" title="ausgearbeitet"></span>' : ''}</li>`).join('')}</ul></div>
       <div class="aside__box"><span class="label">Abschlussprüfung</span><ul><li><a href="#/pruefungen">Prüfungsarchiv ${store.land ? `(${store.land})` : ''} →</a></li></ul></div>
     </aside>
   </div>`;
+}
+
+const landNow = () => LANDS.find((l) => l.code === store.land);
+
+// Fachbezeichnung im gewählten Land, bisher nur Ethik (KMK-Bericht)
+function landNameMeta(s) {
+  const land = landNow();
+  if (s.id !== 'ethik' || !land) return '';
+  return metaItem(`Fachname in ${land.code}`, `${LAND_INFO[land.code].ethik} <a href="${ETHIK_SOURCE.url}" target="_blank" rel="noopener" title="${ETHIK_SOURCE.label}">↗</a>`);
+}
+
+function gymInfo(code) {
+  const i = LAND_INFO[code];
+  return i ? `<p>${i.gym} <span class="muted" style="font-size:14px">Quelle: <a href="${i.source.url}" target="_blank" rel="noopener">${i.source.label} ↗</a></span></p>` : '';
 }
 
 function matchesSubject(title, s) {
@@ -348,6 +373,52 @@ function mountPractice(examId) {
   }
 }
 
+// Abitur Deutsch: gemeinsamer Pool (IQB) plus Landesvorgaben je Prüfungsjahr
+const abiFocusOf = (code) => ABI_FOCUS.filter((f) => f.land === code);
+function abiFocusRow() {
+  return `<a class="examrow" href="#/abi-deutsch">
+    <span><strong>Abitur Deutsch: Lektüren und Themenfelder</strong><small>Gemeinsamer Aufgabenpool und Landesvorgaben · Stand ${IQB_DEUTSCH.stand}</small></span>
+    <span class="access access--info">Überblick</span>
+    <span class="arrow">→</span>
+  </a>`;
+}
+
+function viewAbiDeutsch() {
+  const land = landNow();
+  const val = (v) => Array.isArray(v) ? `<ul>${v.map((x) => `<li>${x}</li>`).join('')}</ul>` : `<p>${v}</p>`;
+  const src = (q) => `<a href="${q.url}" target="_blank" rel="noopener">${q.label} ↗</a>`;
+  const block = (f) => `<section class="examblock" style="margin-top:32px">
+      <div class="examblock__head"><h2>${f.title}</h2><span class="muted">${LANDS.find((l) => l.code === f.land).name}</span></div>
+      <dl class="examfacts">${f.items.map(([k, v]) => `<div><dt>${k}</dt><dd>${val(v)}</dd></div>`).join('')}</dl>
+      <p>Quelle: ${f.sources.map(src).join(' · ')}</p>
+    </section>`;
+  const own = land ? abiFocusOf(land.code) : [];
+  const others = ABI_FOCUS.filter((f) => f.land !== land?.code);
+  return pagehead({
+    crumbs: [['Prüfungen', '#/pruefungen'], ['Abitur Deutsch']],
+    title: 'Abitur Deutsch: Lektüren und Themenfelder',
+    lead: 'Viele Länder nutzen Aufgaben aus dem gemeinsamen Abituraufgabenpool des IQB. Dafür gibt es verbindliche Lektüren und Themenfelder – die Länder legen fest, was davon in ihrem Abitur gilt.',
+    meta: metaItem('Fach', '<a href="#/fach/deutsch">Deutsch</a>') + metaItem('Abschluss', LEVELS.abi.short) + metaItem('Stand', IQB_DEUTSCH.stand),
+  }) + `
+  <div class="wrap" style="padding:36px var(--gutter) 72px">
+    ${land ? (own.length ? own.map(block).join('') : `<p class="note"><strong>${land.name}</strong>Für dein Land haben wir noch keine Landesvorgaben erfasst. Maßgeblich sind die Abiturvorgaben deines Kultusministeriums und die Informationen deiner Schule.</p>`)
+      : '<p class="muted">Wähle oben dein Bundesland, dann stehen die Vorgaben deines Landes zuerst.</p>'}
+
+    <section class="examblock" style="margin-top:32px">
+      <div class="examblock__head"><h2>Gemeinsamer Aufgabenpool</h2><span class="muted">Vereinbarung der Länder, Stand ${IQB_DEUTSCH.stand}</span></div>
+      <h3 class="filehead">Verbindliche Lektüren</h3>
+      <dl class="examfacts">${IQB_DEUTSCH.readings.map((r) => `<div><dt>Abitur ${r.years}</dt><dd>${val(r.works)}</dd></div>`).join('')}</dl>
+      <h3 class="filehead">Themenfelder</h3>
+      <dl class="examfacts">${IQB_DEUTSCH.fields.map((f) => `<div><dt>Themenfeld ${f.nr} · ${f.years}</dt><dd><p><strong>${f.title}</strong></p>${val(f.points)}</dd></div>`).join('')}</dl>
+      <p>Quelle: ${src(IQB_DEUTSCH.source)}</p>
+    </section>
+
+    ${others.length ? `<h2 style="margin-top:40px">Vorgaben anderer Länder</h2>${others.map(block).join('')}` : ''}
+    <p class="note"><strong>Hinweis</strong>Zusammengefasst aus den amtlichen Dokumenten. Verbindlich sind die aktuellen Vorgaben deines Landes und die Informationen deiner Schule.</p>
+    <p class="muted"><a href="#/fach/deutsch">Alle Themen im Fach Deutsch →</a> &nbsp;·&nbsp; <a href="#/pruefungen?level=abi">Abitur-Archive →</a></p>
+  </div>`;
+}
+
 function viewExamPage(id) {
   const p = EXAM_PAGE_BY_ID[id];
   if (!p) return viewNotFound();
@@ -399,6 +470,7 @@ function viewExams(params) {
   const lv = (x) => !level || x.level === level;
   const landFiles = land ? EXAM_FILES.filter((g) => g.land === land.code && lv(g)) : [];
   const landPages = land ? EXAM_PAGES.filter((p) => p.land === land.code && (!level || p.levels.includes(level))) : [];
+  const landAbi = land && (!level || level === 'abi') && abiFocusOf(land.code).length > 0;
 
   return pagehead({
     crumbs: [['Prüfungen']],
@@ -424,7 +496,8 @@ function viewExams(params) {
       <div class="examblock__head"><h2>${land.name}</h2>
         <span class="muted">${['esa', 'msa', 'abi'].map((k) => `<span class="label">${LEVELS[k].short}</span> ${land.names[k]}`).join(' &nbsp;·&nbsp; ')}</span></div>
       ${land.note ? `<p class="note" style="margin:14px 0">${land.note}</p>` : ''}
-      ${landPages.length ? `<h3 class="filehead">Prüfungen im Detail – Aufbau, Dauer, Hilfsmittel</h3>${landPages.map(examPageRow).join('')}<h3 class="filehead">Archive und Aufgaben</h3>` : ''}
+      ${!level || level === 'abi' ? `<div style="margin:14px 0">${gymInfo(land.code)}</div>` : ''}
+      ${landPages.length || landAbi ? `<h3 class="filehead">Prüfungen im Detail – Aufbau, Dauer, Hilfsmittel</h3>${landPages.map(examPageRow).join('')}${landAbi ? abiFocusRow() : ''}<h3 class="filehead">Archive und Aufgaben</h3>` : ''}
       ${land.links.filter(lv).map(examRow).join('') || (land.note ? '' : '<p class="muted" style="padding:14px 4px">Für diesen Abschluss ist uns kein öffentliches Angebot bekannt. Frage deine Lehrkräfte nach Übungsaufgaben aus den Vorjahren.</p>')}
       ${landFiles.length ? `<h3 class="filehead">Direkt zu den Aufgaben – nach Fach und Jahr</h3>${landFiles.map((g) => fileGroup(g)).join('')}` : ''}
     </section>` : '<p class="empty" style="margin-bottom:40px">Wähle oben dein Bundesland, um die Prüfungsarchive deines Landes zu sehen.</p>'}
@@ -432,6 +505,7 @@ function viewExams(params) {
     ${land ? '' : `<section class="examblock">
       <div class="examblock__head"><h2>Prüfungen im Detail</h2><span class="muted">Aufbau, Dauer, Hilfsmittel – nach amtlichen Vorgaben</span></div>
       ${EXAM_PAGES.filter((p) => !level || p.levels.includes(level)).map((p) => examPageRow(p, true)).join('')}
+      ${!level || level === 'abi' ? abiFocusRow() : ''}
     </section>`}
 
     <section class="examblock">
@@ -474,6 +548,8 @@ function viewSources() {
         </ol>
         <h2 id="q2">Lehrpläne & Standards</h2>
         <div class="srclist">${CURRICULA.map(item).join('')}</div>
+        <h3>Lehrplanportale der Länder</h3>
+        <div class="srclist">${LANDS.map((l) => item({ name: `${l.name}: ${l.curriculum.name}`, url: l.curriculum.url, desc: 'Offizielles Portal des Landes' })).join('')}</div>
         <h2 id="q3">Lernportale & Nachschlagewerke</h2>
         <div class="srclist">${LEARNING_SOURCES.map(item).join('')}</div>
         <h2 id="q4">Videos</h2>
@@ -506,7 +582,10 @@ function route() {
   else if (a === 'fach') { html = viewSubject(b, params); title = `${SUBJECT_BY_ID[b]?.name || 'Fach'} · Lernatlas`; }
   else if (a === 'thema') { html = viewTopic(b, params); title = `${TOPIC_BY_ID[b]?.title || 'Thema'} · Lernatlas`; }
   else if (a === 'pruefungen') { html = viewExams(params); title = 'Prüfungsarchiv · Lernatlas'; }
+  else if (a === 'abi-deutsch') { html = viewAbiDeutsch(); title = 'Abitur Deutsch: Lektüren und Themenfelder · Lernatlas'; }
   else if (a === 'pruefung') { html = viewExamPage(b); title = `${EXAM_PAGE_BY_ID[b]?.title || 'Prüfung'} · Lernatlas`; }
+  else if (a === 'plan') { html = viewPlan(); title = 'Lernplan · Lernatlas'; }
+  else if (a === 'karten') { html = viewCards(b, params); title = 'Karteikarten · Lernatlas'; }
   else if (a === 'suche') { html = viewSearch(params); title = 'Suche · Lernatlas'; }
   else if (a === 'quellen') { html = viewSources(); title = 'Quellen · Lernatlas'; }
   else html = viewNotFound();
@@ -519,7 +598,256 @@ function route() {
 
   if (a === 'thema') mountTopic(b);
   if (a === 'pruefung') mountPractice(b);
+  if (a === 'karten') mountCards();
 }
+
+// ───────────────────────── Lernplan ─────────────────────────
+const WEEKDAY = new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const longDate = (d) => WEEKDAY.format(new Date(`${d}T00:00`));
+const shortDate = (d) => d.slice(8, 10) + '.' + d.slice(5, 7) + '.';
+
+// Ein Thema gilt als erledigt, wenn alle Übungen gelöst sind.
+const solvedOf = (id) => Object.values(store.progressOf(id)).filter((v) => v === true).length;
+const topicDone = (id) => CONTENT[id] && solvedOf(id) >= CONTENT[id].exercises.length;
+const examTitle = (x) => x.name || `${SUBJECT_BY_ID[x.subject].name} – Prüfung`;
+const plannable = (sid) => SUBJECT_BY_ID[sid].areas.flatMap((a) => a.topics).filter((t) => CONTENT[t.id]);
+const upcoming = () => store.exams.filter((x) => daysUntil(x.date) >= 0).sort((a, b) => a.date.localeCompare(b.date));
+
+function countdown(days) {
+  if (days === 0) return '<strong class="countdown__n">Heute</strong><span>ist Prüfung</span>';
+  if (days === 1) return '<strong class="countdown__n">1</strong><span>Tag bis zur Prüfung</span>';
+  return `<strong class="countdown__n">${days}</strong><span>Tage bis zur Prüfung${days >= 14 ? ` · ${Math.floor(days / 7)} Wochen` : ''}</span>`;
+}
+
+function planTopicRow(id) {
+  const t = TOPIC_BY_ID[id], c = CONTENT[id];
+  const done = topicDone(id);
+  const due = startedTopics().includes(id) ? deckStats(id, c.merkzettel.length).due : null;
+  return `<li class="plantopic${done ? ' is-done' : ''}">
+    <a href="#/thema/${id}"><strong>${t.title}</strong></a>
+    <span class="plantopic__links">
+      <a href="#/thema/${id}?tab=lernzettel">Lernzettel</a>
+      <a href="#/thema/${id}?tab=uebungen">Übungen ${solvedOf(id)}/${c.exercises.length}</a>
+      <a href="#/karten/${id}">Karten${due ? ` · ${due} fällig` : ''}</a>
+    </span>
+  </li>`;
+}
+
+function examCard(x) {
+  const s = SUBJECT_BY_ID[x.subject];
+  const topics = x.topics.filter((id) => CONTENT[id]);
+  const plan = buildPlan(topics, x.date, topicDone);
+  const done = topics.filter(topicDone).length;
+  const pct = topics.length ? Math.round((done / topics.length) * 100) : 0;
+  const all = plannable(x.subject);
+  const areas = [...new Set(all.map((t) => t.area))];
+  return `<section class="examblock plan" data-exam="${x.id}">
+    <div class="plan__head">
+      <div><p class="label">${s.name} · ${longDate(x.date)}</p><h2>${examTitle(x)}</h2></div>
+      <div class="countdown">${plan.days < 0 ? '<strong class="countdown__n">–</strong><span>Prüfung vorbei</span>' : countdown(plan.days)}</div>
+    </div>
+    <div class="scoreline"><span class="label">Themen erledigt</span><strong>${done}/${topics.length}</strong><div class="progress"><i style="width:${pct}%"></i></div></div>
+    ${!topics.length ? '<p class="muted">Noch keine Themen ausgewählt. Wähle unten die Themen, die in der Prüfung drankommen.</p>'
+      : plan.days < 0 ? '' : `
+      ${plan.blocks.map((b, i) => `<div class="planweek${i === 0 ? ' is-now' : ''}">
+        <p class="label">${i === 0 ? 'Diese Woche' : `Woche ${i + 1}`} · ${shortDate(b.from)}–${shortDate(b.to)}</p>
+        ${b.review ? `<p><strong>Wiederholen statt Neues:</strong> fällige <a href="#/karten?faellig">Karteikarten</a>, Übungen mit Fehlern noch einmal rechnen, Merkzettel durchgehen. Am Tag vor der Prüfung nur noch leicht wiederholen.</p>`
+          : `<ul class="plantopics">${b.topics.map(planTopicRow).join('')}</ul>`}
+      </div>`).join('')}
+      ${plan.open === 0 ? '<p class="note"><strong>Alles erledigt</strong>Alle Übungen der ausgewählten Themen sind gelöst. Halte das Wissen mit den Karteikarten frisch.</p>' : ''}
+      ${done ? `<details class="plandone"><summary>Erledigt (${done})</summary><ul class="plantopics">${topics.filter(topicDone).map(planTopicRow).join('')}</ul></details>` : ''}`}
+    <details class="planpick"${topics.length ? '' : ' open'}>
+      <summary>Themen auswählen (${topics.length} von ${all.length})</summary>
+      <p class="muted" style="font-size:14px">Nur ausgearbeitete Themen mit Übungen. Welche Themen drankommen, sagt dir deine Lehrkraft.</p>
+      ${areas.map((a) => `<fieldset><legend class="label">${a}</legend>${all.filter((t) => t.area === a).map((t) =>
+        `<label><input type="checkbox" data-plan-topic="${t.id}"${x.topics.includes(t.id) ? ' checked' : ''}> ${t.title} <span class="muted">${kLabel(t.k)}</span></label>`).join('')}</fieldset>`).join('')}
+    </details>
+    <div class="actions"><button class="chip" data-plan-remove>Prüfung entfernen</button></div>
+  </section>`;
+}
+
+function viewPlan() {
+  const subjects = SUBJECTS.filter((s) => plannable(s.id).length);
+  const exams = [...upcoming(), ...store.exams.filter((x) => daysUntil(x.date) < 0)];
+  return pagehead({
+    crumbs: [['Lernplan']],
+    title: 'Lernplan',
+    lead: 'Trag deine Prüfungstermine ein. Der Plan verteilt die offenen Themen auf die Wochen bis dahin und hält die letzte Woche für die Wiederholung frei. Er passt sich an, sobald du Übungen löst. Alles bleibt in diesem Browser.',
+  }) + `
+  <div class="wrap" style="padding:36px var(--gutter) 72px">
+    ${exams.map(examCard).join('') || '<p class="empty">Noch keine Prüfung eingetragen.</p>'}
+    <section class="examblock" style="margin-top:40px">
+      <div class="examblock__head"><h2>Prüfung eintragen</h2><span class="muted">Den Termin erfährst du von deiner Schule oder aus dem Terminplan deines Kultusministeriums.</span></div>
+      <form class="planform" data-plan-form>
+        <label><span class="label">Fach</span><select name="subject" required>${subjects.map((s) => `<option value="${s.id}">${s.name}</option>`).join('')}</select></label>
+        <label><span class="label">Datum</span><input type="date" name="date" min="${today()}" required></label>
+        <label><span class="label">Name (optional)</span><input type="text" name="name" maxlength="60" placeholder="z. B. Klassenarbeit Brüche"></label>
+        <button class="btn" type="submit">Eintragen</button>
+      </form>
+    </section>
+  </div>`;
+}
+
+document.addEventListener('submit', (e) => {
+  const f = e.target.closest('[data-plan-form]');
+  if (!f) return;
+  e.preventDefault();
+  const d = new FormData(f);
+  const subject = d.get('subject');
+  // Ohne Vorauswahl: Welche Themen drankommen, weiß nur die Schule.
+  store.addExam({ id: Date.now().toString(36), subject, date: d.get('date'), name: String(d.get('name') || '').trim(), topics: [] });
+  route();
+});
+document.addEventListener('change', (e) => {
+  const box = e.target.closest('[data-plan-topic]');
+  if (!box) return;
+  const id = box.closest('[data-exam]').dataset.exam;
+  const x = store.exams.find((v) => v.id === id);
+  const topics = box.checked ? [...x.topics, box.dataset.planTopic] : x.topics.filter((t) => t !== box.dataset.planTopic);
+  store.updateExam(id, { topics });
+  const open = [...document.querySelectorAll('details.planpick')].map((dt) => dt.open);
+  const y = window.scrollY;
+  route();
+  document.querySelectorAll('details.planpick').forEach((dt, i) => { dt.open = open[i]; });
+  window.scrollTo(0, y);
+});
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-plan-remove]');
+  if (!b) return;
+  const id = b.closest('[data-exam]').dataset.exam;
+  if (confirm(`„${examTitle(store.exams.find((v) => v.id === id))}“ aus dem Lernplan entfernen?`)) { store.removeExam(id); route(); }
+});
+
+// ───────────────────────── Karteikarten ─────────────────────────
+// Lernsitzung im Speicher; die Bewertungen landen über cards.js im localStorage.
+let session = null;
+const fmtDate = (d) => d.split('-').reverse().join('.');
+
+function cardHint(id, c) {
+  if (!startedTopics().includes(id)) return '';
+  const { due } = deckStats(id, c.merkzettel.length);
+  return due ? ` · ${due} fällig` : ' · alles wiederholt';
+}
+
+function cardQueue(topicIds, all) {
+  return topicIds.flatMap((tid) => (CONTENT[tid]?.merkzettel || []).map((_, i) => ({ tid, i })))
+    .filter((x) => all || isDue(store.cards[cardId(x.tid, x.i)]));
+}
+
+function viewCards(topicId, params) {
+  if (topicId) {
+    const t = TOPIC_BY_ID[topicId], c = CONTENT[topicId];
+    if (!t || !c) return viewNotFound();
+    const s = SUBJECT_BY_ID[t.subject];
+    session = { queue: cardQueue([topicId], params.has('alle')), known: 0, again: 0, topicId };
+    return pagehead({
+      crumbs: [['Karteikarten', '#/karten'], [s.name, `#/fach/${s.id}`], [t.title, `#/thema/${topicId}?tab=merkzettel`]],
+      title: t.title,
+      lead: 'Karteikarten aus dem Merkzettel. Erst selbst überlegen, dann aufdecken und ehrlich bewerten.',
+    }) + '<div class="wrap cardwrap" data-cards></div>';
+  }
+  if (params.has('faellig')) {
+    session = { queue: cardQueue(startedTopics(), false), known: 0, again: 0 };
+    return pagehead({ crumbs: [['Karteikarten', '#/karten'], ['Fällige Karten']], title: 'Fällige Karten', lead: 'Alle Karten aus deinen Themen, die heute dran sind.' }) + '<div class="wrap cardwrap" data-cards></div>';
+  }
+  session = null;
+  const decks = startedTopics().filter((id) => CONTENT[id] && TOPIC_BY_ID[id])
+    .map((id) => ({ id, t: TOPIC_BY_ID[id], next: nextDue(id, CONTENT[id].merkzettel.length), ...deckStats(id, CONTENT[id].merkzettel.length) }));
+  const due = decks.reduce((n, d) => n + d.due, 0);
+  return pagehead({
+    crumbs: [['Karteikarten']],
+    title: 'Karteikarten',
+    lead: 'Lernkartei aus den Merkzetteln: Was du weißt, kommt in größeren Abständen wieder, was du nicht weißt, gleich noch einmal. Dein Stand bleibt nur in diesem Browser.',
+  }) + `
+  <div class="wrap" style="padding:36px var(--gutter) 72px">
+    ${decks.length ? `<div class="factbox">
+        <div><span class="label">Heute fällig</span><strong>${due} ${due === 1 ? 'Karte' : 'Karten'}</strong></div>
+        <div><span class="label">Themen in deiner Kartei</span><strong>${decks.length}</strong></div>
+        <div><span class="label">Sicher gelernt (Fach ${MAX_BOX})</span><strong>${decks.reduce((n, d) => n + d.boxes[MAX_BOX - 1], 0)}</strong></div>
+      </div>
+      ${due ? `<div class="actions" style="margin:0 0 28px"><a class="btn" href="#/karten?faellig">Fällige Karten lernen (${due}) →</a></div>` : '<p class="muted">Für heute ist alles wiederholt.</p>'}
+      <section class="examblock"><div class="examblock__head"><h2>Deine Themen</h2><span class="muted">Balken: Karten je Fach, links neu, rechts sicher gelernt</span></div>
+        ${decks.map((d) => `<a class="examrow" href="#/karten/${d.id}">
+          <span><strong>${d.t.title}</strong><small>${SUBJECT_BY_ID[d.t.subject].name} · ${d.due ? `${d.due} fällig` : `nächste Wiederholung ${d.next ? fmtDate(d.next) : '–'}`}</small></span>
+          <span class="boxes" aria-label="Karten je Fach">${[d.fresh, ...d.boxes].map((n, b) => `<i title="${b ? `Fach ${b}` : 'Neu'}: ${n}" style="--n:${n}"></i>`).join('')}</span>
+          <span class="arrow">→</span>
+        </a>`).join('')}
+      </section>`
+      : `<p class="empty">Noch keine Karten. Öffne ein ausgearbeitetes Thema und wähle im Reiter „Merkzettel“ <strong>Als Karteikarten lernen</strong>. <a href="#/faecher">Zu den Fächern →</a></p>`}
+    <section class="examblock" style="margin-top:40px"><div class="examblock__head"><h2>So funktioniert die Kartei</h2></div>
+      <dl class="examfacts">
+        <div><dt>Gewusst</dt><dd><p>Die Karte rückt ein Fach weiter und kommt erst später wieder: ${INTERVALS.slice(1).map((n, i) => `Fach ${i + 1} nach ${n} ${n === 1 ? 'Tag' : 'Tagen'}`).join(', ')}.</p></dd></div>
+        <div><dt>Nochmal</dt><dd><p>Die Karte fällt zurück in Fach 1 und kommt in derselben Runde noch einmal.</p></dd></div>
+        <div><dt>Tastatur</dt><dd><p>Leertaste deckt auf, <kbd>1</kbd> heißt „Nochmal“, <kbd>2</kbd> heißt „Gewusst“.</p></dd></div>
+      </dl>
+    </section>
+  </div>`;
+}
+
+function mountCards() {
+  const root = $('[data-cards]');
+  if (!root || !session) return;
+  const card = session.queue[0];
+  if (!card) {
+    const done = session.known + session.again;
+    const next = session.topicId ? nextDue(session.topicId, CONTENT[session.topicId].merkzettel.length) : null;
+    root.innerHTML = `<div class="flash flash--end">
+      <p class="label">${done ? 'Runde beendet' : 'Nichts fällig'}</p>
+      <h2>${done ? `${session.known} gewusst, ${session.again}× nochmal` : 'Für heute ist alles wiederholt.'}</h2>
+      ${next ? `<p class="muted">Nächste Wiederholung: ${fmtDate(next)}</p>` : ''}
+      <div class="actions" style="justify-content:center">
+        ${session.topicId ? `<a class="btn" href="#/thema/${session.topicId}?tab=uebungen">Übungen zum Thema →</a><a class="btn btn--ghost" href="#/karten/${session.topicId}?alle">Alle Karten üben</a>` : ''}
+        <a class="btn btn--ghost" href="#/karten">Zur Kartei</a>
+      </div></div>`;
+    return;
+  }
+  const [front, back] = CONTENT[card.tid].merkzettel[card.i];
+  const box = store.cards[cardId(card.tid, card.i)]?.box;
+  root.innerHTML = `
+    <div class="flashbar"><span class="label">Noch ${session.queue.length} · ${session.known} gewusst</span><span class="label">${box ? `Fach ${box}` : 'Neu'}</span></div>
+    <article class="flash">
+      ${session.topicId ? '' : `<p class="label">${TOPIC_BY_ID[card.tid].title}</p>`}
+      <div class="flash__front">${front}</div>
+      <div class="flash__back" data-back hidden>${back}</div>
+    </article>
+    <div class="actions flash__actions">
+      <button class="btn" data-card="show">Aufdecken <kbd>Leertaste</kbd></button>
+      <button class="btn btn--ghost" data-card="again" hidden>Nochmal <kbd>1</kbd></button>
+      <button class="btn" data-card="known" hidden>Gewusst <kbd>2</kbd></button>
+    </div>`;
+  root.querySelector('[data-card="show"]').focus({ preventScroll: true });
+}
+
+function cardAction(kind) {
+  const root = $('[data-cards]');
+  if (!root || !session?.queue.length) return;
+  const shown = !root.querySelector('[data-back]').hidden;
+  if (kind === 'show' && !shown) {
+    root.querySelector('[data-back]').hidden = false;
+    root.querySelector('[data-card="show"]').hidden = true;
+    root.querySelectorAll('[data-card="again"], [data-card="known"]').forEach((b) => { b.hidden = false; });
+    root.querySelector('[data-card="known"]').focus({ preventScroll: true });
+    return;
+  }
+  if (!shown || (kind !== 'again' && kind !== 'known')) return;
+  const card = session.queue.shift();
+  rate(cardId(card.tid, card.i), kind === 'known');
+  if (kind === 'known') session.known++;
+  else { session.again++; session.queue.push(card); }
+  mountCards();
+}
+
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-card]');
+  if (b) cardAction(b.dataset.card);
+});
+document.addEventListener('keydown', (e) => {
+  if (!session || !$('[data-cards]') || e.ctrlKey || e.metaKey || e.altKey || e.target.closest?.('input, textarea, select')) return;
+  const kind = { ' ': 'show', Enter: 'show', 1: 'again', 2: 'known' }[e.key];
+  if (!kind) return;
+  e.preventDefault();
+  cardAction(kind);
+});
 
 function mountTopic(id) {
   const c = CONTENT[id];
@@ -634,6 +962,7 @@ document.addEventListener('click', (e) => {
   const land = t.closest('[data-land]')?.dataset.land;
   if (land) {
     store.setLand(land);
+    syncHeader();
     const { params } = parseHash();
     params.delete('land');
     const qs = params.toString();
@@ -650,6 +979,8 @@ document.addEventListener('click', (e) => {
 });
 
 $('[data-action="school"]').addEventListener('change', (e) => { store.setSchool(e.target.value); route(); });
+$('[data-action="land"]').insertAdjacentHTML('beforeend', LANDS.map((l) => `<option value="${l.code}">${l.name}</option>`).join(''));
+$('[data-action="land"]').addEventListener('change', (e) => { store.setLand(e.target.value); route(); });
 
 document.addEventListener('keydown', (e) => {
   const typing = e.target instanceof Element && e.target.closest('input, textarea, select');
@@ -665,7 +996,7 @@ document.addEventListener('keydown', (e) => {
   next.focus(); selectTab(next.dataset.tab);
 });
 
-function syncHeader() { $('[data-action="school"]').value = store.school; }
+function syncHeader() { $('[data-action="school"]').value = store.school; $('[data-action="land"]').value = store.land; }
 
 function applyTheme() {
   if (store.theme) document.documentElement.dataset.theme = store.theme;

@@ -16,7 +16,7 @@ UA = 'Mozilla/5.0 (Lernatlas-Linkcheck; +https://github.com/)'
 BS = 'https://www.bildungsserver.de/onlineressource.html?onlineressourcen_id='
 # Seiten, die Skripte per Bot-Sperre (403) abweisen, im Browser aber laden – zuletzt
 # im Browser geprüft im Oktober 2026. Werden als Hinweis statt als Defekt gemeldet.
-BOT_BLOCKED = {'learnenglish.britishcouncil.org'}
+BOT_BLOCKED = {'learnenglish.britishcouncil.org', 'www.saarland.de'}
 
 def collect():
     links = {}
