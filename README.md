@@ -14,12 +14,12 @@ Dann http://localhost:8090 öffnen.
 
 ## Veröffentlichen (GitHub Pages)
 
-Die Seite läuft unter `https://<konto>.github.io/lernatlas/`. Alle Pfade sind relativ, ein Unterpfad ist also kein Problem.
+Die Seite läuft unter `https://fettglatze.github.io/lernatlas/`. Alle Pfade sind relativ, ein Unterpfad ist also kein Problem.
 
 1. Auf GitHub ein **öffentliches** Repository `lernatlas` anlegen (bei GitHub Free Pflicht für Pages), ohne README.
 2. Repo verbinden und hochladen:
    ```bash
-   git remote add origin https://github.com/<konto>/lernatlas.git
+   git remote add origin https://github.com/fettglatze/lernatlas.git
    git push -u origin main
    ```
 3. Im Repo unter **Settings → Pages** als Quelle „Deploy from a branch“, Branch `main`, Ordner `/ (root)` wählen. Nach einigen Minuten ist die Seite online, HTTPS ist automatisch an.
