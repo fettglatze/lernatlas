@@ -4,6 +4,7 @@ import { CONTENT } from '../../data/content/index.js';
 import { LANDS, NATIONAL, LEVELS } from '../../data/exams.js';
 import { EXAM_FILES } from '../../data/exam-files.js';
 import { EXAM_PAGES, EXAM_PAGE_BY_ID } from '../../data/exam-pages.js';
+import { PRACTICE } from '../../data/exam-practice.js';
 import { videoLinks, referenceLinks, CURRICULA, LEARNING_SOURCES } from '../../data/sources.js';
 import { store } from './store.js';
 import { search, highlight, escapeHtml } from './search.js';
@@ -307,6 +308,46 @@ function examPageRow(p, showLand = false) {
   </a>`;
 }
 
+// Eigener Übungssatz im Prüfungsstil; die Aufgaben hängt mountPractice() ein.
+const practiceKey = (set) => `uebung:${set.id}`;
+const practiceCount = (set) => set.parts.reduce((n, pt) => n + (pt.exercises?.length || 0), 0);
+function practiceSet(set) {
+  return `<section class="examblock practice" data-practice="${set.id}" style="margin-top:40px">
+    <div class="examblock__head"><h2>${set.title}</h2><span class="muted">eigene Aufgaben im Prüfungsstil – keine Originalprüfung</span></div>
+    <p style="max-width:70ch">${set.lead}</p>
+    <div class="scoreline"><span class="label">Fortschritt</span><strong data-score>0/${practiceCount(set)}</strong><div class="progress"><i data-bar></i></div><button class="chip" data-action="reset-practice">Zurücksetzen</button></div>
+    ${set.parts.map((pt, i) => `<div class="practice__part">
+      <h3>${pt.title}</h3>${pt.note ? `<p class="label">${pt.note}</p>` : ''}
+      ${pt.passage ? `<div class="passage">${pt.passage}</div>` : ''}
+      ${pt.exercises ? `<div data-part="${i}"></div>` : ''}
+      ${pt.task ? `<div class="ex"><div class="ex__head"><span class="label"><b>Schreibauftrag</b></span><span class="label">ohne automatische Prüfung</span></div><div class="ex__body">
+        <div class="ex__q"><p>${pt.task.q}</p></div>
+        <p class="label" style="margin:0 0 8px">Checkliste zum Überarbeiten</p>
+        <ul class="checklist">${pt.task.checklist.map((c) => `<li><label><input type="checkbox"> ${c}</label></li>`).join('')}</ul>
+      </div></div>` : ''}
+    </div>`).join('')}
+  </section>`;
+}
+
+function mountPractice(examId) {
+  for (const set of PRACTICE.filter((x) => x.for.includes(examId))) {
+    const root = $(`[data-practice="${set.id}"]`);
+    if (!root) continue;
+    const key = practiceKey(set), total = practiceCount(set);
+    const update = () => {
+      const solved = Object.values(store.progressOf(key)).filter((v) => v === true).length;
+      root.querySelector('[data-bar]').style.width = `${Math.round((solved / total) * 100)}%`;
+      root.querySelector('[data-score]').textContent = `${solved}/${total}`;
+    };
+    let n = 0;
+    set.parts.forEach((pt, i) => {
+      const box = root.querySelector(`[data-part="${i}"]`);
+      (pt.exercises || []).forEach((ex) => box.appendChild(renderExercise(ex, n++, key, update)));
+    });
+    update();
+  }
+}
+
 function viewExamPage(id) {
   const p = EXAM_PAGE_BY_ID[id];
   if (!p) return viewNotFound();
@@ -314,6 +355,7 @@ function viewExamPage(id) {
   const s = SUBJECT_BY_ID[p.subject];
   const files = EXAM_FILES.filter((g) => g.land === p.land && g.subject === p.subject && p.levels.includes(g.level));
   const links = land.links.filter((l) => p.levels.includes(l.level));
+  const sets = PRACTICE.filter((x) => x.for.includes(p.id));
   const val = (v) => Array.isArray(v) ? `<ul>${v.map((x) => `<li>${x}</li>`).join('')}</ul>` : `<p>${v}</p>`;
   return pagehead({
     crumbs: [['Prüfungen', '#/pruefungen'], [land.name, `#/pruefungen?land=${land.code}`], [p.title]],
@@ -327,8 +369,10 @@ function viewExamPage(id) {
     <p class="note"><strong>Hinweis</strong>Zusammengefasst aus der amtlichen Quelle unten. Die Länder passen Details jedes Jahr an – verbindlich sind der aktuelle Erlass und die Informationen eurer Schule.</p>
     <p>Quelle: <a href="${p.source.url}" target="_blank" rel="noopener">${p.source.label} ↗</a>${(p.more || []).map((m) => ` · <a href="${m.url}" target="_blank" rel="noopener">${m.label} ↗</a>`).join('')}</p>
 
+    ${sets.map(practiceSet).join('')}
+
     ${files.length || links.length ? `<section class="examblock" style="margin-top:40px">
-      <div class="examblock__head"><h2>Zum Üben</h2><span class="muted">Originalaufgaben und Archive aus ${land.name}</span></div>
+      <div class="examblock__head"><h2>Originalaufgaben</h2><span class="muted">Originalaufgaben und Archive aus ${land.name}</span></div>
       ${files.map((g, i) => fileGroup(g, i === 0)).join('')}
       ${links.map(examRow).join('')}
     </section>` : ''}
@@ -474,6 +518,7 @@ function route() {
   lastPath = path;
 
   if (a === 'thema') mountTopic(b);
+  if (a === 'pruefung') mountPractice(b);
 }
 
 function mountTopic(id) {
@@ -573,6 +618,7 @@ document.addEventListener('click', (e) => {
   if (action === 'close-search') dlg.close();
   if (action === 'print') window.print();
   if (action === 'theme') toggleTheme();
+  if (action === 'reset-practice') { const set = t.closest('[data-practice]')?.dataset.practice; if (set) { store.resetTopic(`uebung:${set}`); const y = window.scrollY; route(); window.scrollTo(0, y); } }
   if (action === 'reset') { const id = $('[data-topic]')?.dataset.topic; if (id) { store.resetTopic(id); route(); selectTab('uebungen'); } }
   if (action === 'yt') {
     const box = t.closest('[data-yt]');

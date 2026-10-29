@@ -428,6 +428,15 @@ sup, sub { line-height: 0; }
 .examfacts dd ul { padding-left: 1.2em; }
 .examfacts dd li { margin: .3em 0; }
 .examfacts dd li::marker { color: var(--ink-3); }
+.practice__part { margin-top: 28px; }
+.practice__part > h3 { font-weight: 700; font-size: 18px; margin: 0 0 4px; }
+.practice__part > .label { margin: 0 0 12px; }
+.passage { border-left: 3px solid var(--line-2); padding: 4px 0 4px 18px; margin: 12px 0 20px; max-width: 70ch; }
+.passage h4 { font-family: var(--f-display); font-size: 22px; font-weight: 400; margin: 0 0 8px; }
+.passage p { margin: 0 0 .8em; }
+.checklist { list-style: none; padding: 0; margin: 0; }
+.checklist li { margin: 6px 0; }
+.checklist input { margin-right: 8px; accent-color: var(--ink); }
 .filehead { font-family: var(--f-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin: 28px 0 4px; }
 .filegroup { border-bottom: 1px solid var(--line); }
 .filegroup > summary { display: grid; grid-template-columns: 1fr 190px 24px; gap: 16px; align-items: center; padding: 14px 4px; cursor: pointer; list-style: none; }

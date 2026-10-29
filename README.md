@@ -32,6 +32,7 @@ lernatlas/
     ├── exams.js             Prüfungsarchiv: bundesweit + 16 Länder
     ├── exam-files.js        generiert: direkte Prüfungs-PDFs je Land/Fach/Jahr
     ├── exam-pages.js        Prüfungsseiten: Aufbau, Dauer, Hilfsmittel (amtliche Quellen)
+    ├── exam-practice.js     eigene Übungssätze im Prüfungsstil zu den Prüfungsseiten
     ├── sources.js           Videokanäle und Nachschlagewerke je Fach
     └── content/             Ausgearbeitete Themen (Lernzettel, Merkzettel, Übungen)
         ├── index.js         führt alle Inhaltsdateien zusammen

@@ -1,6 +1,6 @@
 # Lernatlas – Roadmap
 
-Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4 Schritt 3 begonnen (6 Prüfungsseiten)
+Stand: 28.10.2026 · Phase 1 abgeschlossen, Phase 2 abgeschlossen (alle 291 Katalogthemen ausgearbeitet) · Phase 3 abgeschlossen (405 geprüfte Videos für 236 von 291 Themen) · Phase 4: Schritte 1, 2, 4 fertig, Schritt 3 begonnen (6 Prüfungsseiten)
 
 ## Phase 1 – Fundament ✅
 
@@ -50,7 +50,7 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
 2. ✅ **Deep-Links je Land, Fach und Jahr:** `tools/exams/deeplinks.py` liest die Download-Listen von Bremen (Abitur, MSA, BBR), Sachsen-Anhalt (Abitur seit 2023) und ISB Bayern (Abitur, Realschule) und erzeugt `data/exam-files.js`: 839 direkte PDF-Links in 41 Fach-/Abschlussgruppen, alle per Link-Checker erreichbar. Im Prüfungsarchiv erscheinen sie je Land aufklappbar nach Jahrgang; auf Themenseiten zuerst für das eigene Land, darunter als „frei verfügbar aus anderen Ländern“. MV (Seite nicht erreichbar) und IQB (Fachseiten schon verlinkt) bleiben bei den Übersichtslinks.
 3. 🔶 **Prüfungsseiten (erster Satz):** `data/exam-pages.js` + Route `#/pruefung/<id>` mit Aufbau, Dauer, Hilfsmitteln und Bewertung – nur aus amtlichen Quellen, jeweils mit Stand und Quellenlink. Fertig: NRW ZP10 Deutsch/Mathe/Englisch (Standardsicherung-FAQ), Hamburg ESA/MSA Deutsch und Mathe 2027 (Regelungen der Behörde), Bayern Abitur Mathematik ab 2026 (KMS 23.07.2024). Verlinkt im Prüfungsarchiv (Übersicht und je Land) und auf Themenseiten („So läuft die Prüfung ab“).
    - Offen: weitere Länder und Fächer. Für BW, NI, BE/BB fanden sich nur ältere Erlasse oder widersprüchliche Schulangaben – erst aufnehmen, wenn eine aktuelle amtliche Quelle vorliegt.
-4. Eigene Übungsaufgaben im Prüfungsstil, wo keine Originale frei verfügbar sind
+4. ✅ **Eigene Übungssätze im Prüfungsstil:** `data/exam-practice.js`, eingebunden auf den Prüfungsseiten mit Fortschritt und Zurücksetzen. Fünf Sätze mit 44 automatisch geprüften Aufgaben plus zwei Schreibaufträgen mit Checkliste: ZP10 Mathe Teil I (NRW, Originale nur mit Login), Hamburg MSA Mathe Aufgabe I + II, Bayern Abitur Mathe Teil A, Deutsch-Sachtext (NRW + Hamburg), Englisch-Reading (NRW). Alle Texte und Aufgaben selbst verfasst; jede Lösung im Browser gegen die Engine getestet. Neue Prüfungsseiten bekommen ihren Satz im selben Format.
 
 ## Phase 5 – Bundesland-Modus
 
