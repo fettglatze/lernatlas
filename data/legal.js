@@ -12,11 +12,13 @@ export const OPERATOR = {
   responsible: null,   // Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV (Name, Anschrift), falls abweichend
 };
 
-// Hosting-Anbieter, sobald festgelegt (siehe ROADMAP „Vor dem Livegang“).
+// Hosting-Anbieter (Stand 29.10.2026: GitHub Pages, siehe README „Veröffentlichen“).
+// Angaben aus der GitHub-Datenschutzerklärung und der Pages-Dokumentation.
 export const HOSTER = {
-  name: null,          // z. B. Firma, Anschrift
-  privacyUrl: null,    // Datenschutzhinweise des Anbieters
+  name: 'GitHub Pages, einem Dienst von GitHub (GitHub B.V., Prins Bernhardplein 200, 1097 JB Amsterdam, Niederlande, und GitHub, Inc., USA)',
+  privacyUrl: 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',
   dpa: false,          // Auftragsverarbeitungsvertrag (Art. 28 DSGVO) abgeschlossen?
+  usTransfer: true,    // Daten können in die USA gehen (Anbieter nach dem EU-US Data Privacy Framework zertifiziert)
 };
 
 export const LEGAL_STAND = '29.10.2026';
