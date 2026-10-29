@@ -21,6 +21,8 @@ lernatlas/
 ├── sw.js                    Service Worker (offline), Dateiliste generiert
 ├── assets/icons/            App-Icons (192, 512, maskable, Apple)
 ├── assets/css/main.css      Design-System (Tokens, Hell/Dunkel, Druckansicht)
+├── assets/css/fonts.css     generiert: @font-face für die lokalen Schriften
+├── assets/fonts/            Schriften als woff2 + Lizenztexte (SIL OFL 1.1)
 ├── assets/js/
 │   ├── app.js               Router (#/…), alle Ansichten, globale Events
 │   ├── search.js            Suche (umlaut- und tippfehlertolerant)
@@ -30,6 +32,7 @@ lernatlas/
 │   ├── render.js            Lernzettel-Blöcke → HTML
 │   └── store.js             Schulform, Bundesland, Fortschritt, Karteikarten, Prüfungstermine (localStorage)
 ├── tools/exams/deeplinks.py erzeugt data/exam-files.js (direkte Links auf Länder-PDFs)
+├── tools/fonts/fetch_fonts.py lädt die Schriften einmalig von Google und legt sie lokal ab
 ├── tools/pwa/                build_sw.py (nach jeder Änderung ausführen), icons.py
 ├── tools/linkcheck.py       prüft alle Links in data/ (monatlich: python tools/linkcheck.py)
 ├── tools/videos/            Skripte zum Kuratieren und Prüfen von Videos (Python)
@@ -41,6 +44,7 @@ lernatlas/
     ├── exam-practice.js     eigene Übungssätze im Prüfungsstil zu den Prüfungsseiten
     ├── abi-focus.js         Abitur Deutsch: Lektüren und Themenfelder (IQB-Pool und Landesvorgaben)
     ├── land-info.js         je Land: Weg zum Abitur am Gymnasium, Fachname Ethik
+    ├── legal.js             Angaben für Impressum und Datenschutz (vor Livegang ausfüllen)
     ├── sources.js           Videokanäle und Nachschlagewerke je Fach
     └── content/             Ausgearbeitete Themen (Lernzettel, Merkzettel, Übungen)
         ├── index.js         führt alle Inhaltsdateien zusammen

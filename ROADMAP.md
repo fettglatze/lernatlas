@@ -69,7 +69,7 @@ Ergebnis Phase 3: 405 Videos für 236 von 291 Themen. Die übrigen 55 Themen zei
    - **Graph ablesen**: optionales `graph`-Feld bei jeder Aufgabe, gezeichnet als SVG-Koordinatensystem. Funktionsgraphen liefert der Helfer `plot()`.
 
    Bei Fehlern wird jeder Teil einzeln markiert, und „Lösung zeigen“ trägt die Lösung direkt ein. Die Mischung ist je Aufgabe fest, damit die Reihenfolge beim Neuladen gleich bleibt. 14 Beispielaufgaben in 10 Themen stehen in `data/content/aufgabentypen.js`. Sie werden hinten angehängt, damit der gespeicherte Fortschritt der alten Aufgaben erhalten bleibt. Nebenbei behoben: Ausgeblendete Buttons (`hidden`) blieben sichtbar, darunter „Lösung zeigen“ nach richtiger Antwort.
-4. ✅ **Offline-Nutzung als PWA** (`sw.js`, `manifest.webmanifest`, `assets/icons/`): Die Seite lässt sich auf dem Handy und am Rechner installieren. Beim ersten Besuch speichert der Service Worker alle Seiten, Skripte, Stile und Inhalte (61 Dateien). Danach funktionieren Lernzettel, Übungen, Karteikarten und Lernplan ohne Internet. Er lädt zuerst aus dem Netz und greift nur ohne Verbindung auf den Cache zurück, damit nie eine veraltete Fassung hängen bleibt. Offline erscheint oben ein Hinweis, denn Videos, externe Links und die Google-Schriften brauchen weiter Internet. Ohne Netz springen Systemschriften ein.
+4. ✅ **Offline-Nutzung als PWA** (`sw.js`, `manifest.webmanifest`, `assets/icons/`): Die Seite lässt sich auf dem Handy und am Rechner installieren. Beim ersten Besuch speichert der Service Worker alle Seiten, Skripte, Stile und Inhalte (61 Dateien). Danach funktionieren Lernzettel, Übungen, Karteikarten und Lernplan ohne Internet. Er lädt zuerst aus dem Netz und greift nur ohne Verbindung auf den Cache zurück, damit nie eine veraltete Fassung hängen bleibt. Offline erscheint oben ein Hinweis, denn Videos und externe Links brauchen weiter Internet.
    - **Nach jeder Änderung an Dateien:** `python tools/pwa/build_sw.py` ausführen. Das Skript schreibt die Dateiliste und eine neue Version (Prüfsumme) in `sw.js`, dann tauscht der Browser den Cache aus.
    - Die Icons erzeugt `python tools/pwa/icons.py` (braucht Pillow).
 
@@ -77,8 +77,10 @@ Nebenbei: **Menü für schmale Bildschirme**. Unter 960 px öffnet ein Menü-Kno
 
 ## Vor dem Livegang (Pflicht)
 
-- [ ] **Schriften lokal hosten** statt über Google Fonts. Das LG München hat Google-Fonts-Einbindungen 2022 als DSGVO-Verstoß gewertet.
-- [ ] **Impressum** (§ 5 DDG) und **Datenschutzerklärung**
+- [x] **Schriften lokal hosten** statt über Google Fonts. Das LG München hat Google-Fonts-Einbindungen 2022 als DSGVO-Verstoß gewertet. Erledigt am 29.10.2026: Atkinson Hyperlegible, Instrument Serif und JetBrains Mono liegen als woff2 in `assets/fonts/` (nur latin und latin-ext, 12 Dateien, ca. 190 KB) samt Lizenztexten (SIL OFL 1.1). `assets/css/fonts.css` erzeugt `python tools/fonts/fetch_fonts.py`. Die Seite fragt bei keinem fremden Server mehr an, außer bei eingebetteten Videos und externen Links. Die Schriften sind auch offline im Cache.
+- [ ] **Impressum** (§ 5 DDG) und **Datenschutzerklärung**. Vorlage steht seit 29.10.2026 (Seiten `#/impressum` und `#/datenschutz`, Footer-Links). Sie beschreibt nur, was die Seite tatsächlich tut: keine Cookies, localStorage und Offline-Cache nach § 25 Abs. 2 Nr. 2 TDDDG, YouTube erst nach Klick über youtube-nocookie.com, Server-Logs beim Hoster. Auf der Datenschutzseite gibt es einen Knopf, der alle lokalen Daten löscht.
+  - **Offen:** In `data/legal.js` Name, ladungsfähige Anschrift, E-Mail und den Hoster eintragen. Solange etwas fehlt, zeigen beide Seiten einen Entwurfs-Hinweis.
+  - Texte vor dem Livegang rechtlich prüfen lassen, sie sind keine Rechtsberatung.
 - [ ] Hosting festlegen (statisch, z. B. GitHub Pages oder Netlify mit EU-Region)
 - [ ] Alle Inhalte fachlich gegenlesen lassen
 - [ ] Barrierefreiheit prüfen (Kontraste, Screenreader, Tastaturbedienung)

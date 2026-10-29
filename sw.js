@@ -4,10 +4,23 @@
 // Externe Seiten (YouTube, Prüfungsarchive, Schriften von Google) werden nicht zwischengespeichert.
 
 // PRECACHE-START – erzeugt von tools/pwa/build_sw.py, nicht von Hand ändern
-const VERSION = '88d1ffb71211';
+const VERSION = '3ef411ce30ae';
 const FILES = [
   "./",
+  "assets/css/fonts.css",
   "assets/css/main.css",
+  "assets/fonts/atkinson-hyperlegible-italic-400-latin-ext.woff2",
+  "assets/fonts/atkinson-hyperlegible-italic-400-latin.woff2",
+  "assets/fonts/atkinson-hyperlegible-normal-400-latin-ext.woff2",
+  "assets/fonts/atkinson-hyperlegible-normal-400-latin.woff2",
+  "assets/fonts/atkinson-hyperlegible-normal-700-latin-ext.woff2",
+  "assets/fonts/atkinson-hyperlegible-normal-700-latin.woff2",
+  "assets/fonts/instrument-serif-italic-400-latin-ext.woff2",
+  "assets/fonts/instrument-serif-italic-400-latin.woff2",
+  "assets/fonts/instrument-serif-normal-400-latin-ext.woff2",
+  "assets/fonts/instrument-serif-normal-400-latin.woff2",
+  "assets/fonts/jetbrains-mono-normal-400-500-latin-ext.woff2",
+  "assets/fonts/jetbrains-mono-normal-400-500-latin.woff2",
   "assets/icons/apple-touch-icon.png",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
@@ -64,6 +77,7 @@ const FILES = [
   "data/exam-practice.js",
   "data/exams.js",
   "data/land-info.js",
+  "data/legal.js",
   "data/sources.js",
   "index.html",
   "manifest.webmanifest"

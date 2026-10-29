@@ -10,10 +10,10 @@
   <meta name="theme-color" content="#151412" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <!-- TODO vor Livegang: Schriften lokal hosten (DSGVO, siehe ROADMAP.md) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Schriften liegen lokal (DSGVO), erzeugt von tools/fonts/fetch_fonts.py -->
+  <link rel="preload" href="assets/fonts/atkinson-hyperlegible-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231b1a17'/%3E%3Crect x='6' y='6' width='9' height='20' fill='%23e2552b'/%3E%3Crect x='17' y='6' width='9' height='9' fill='%23f3efe6'/%3E%3C/svg%3E">
 </head>
@@ -80,6 +80,8 @@
         <a href="#/karten">Karteikarten</a>
         <a href="#/plan">Lernplan</a>
         <a href="#/quellen">Quellen &amp; Methodik</a>
+        <a href="#/impressum">Impressum</a>
+        <a href="#/datenschutz">Datenschutz</a>
       </nav>
     </div>
   </footer>

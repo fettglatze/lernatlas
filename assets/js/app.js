@@ -7,6 +7,7 @@ import { EXAM_PAGES, EXAM_PAGE_BY_ID } from '../../data/exam-pages.js';
 import { PRACTICE } from '../../data/exam-practice.js';
 import { IQB_DEUTSCH, ABI_FOCUS } from '../../data/abi-focus.js';
 import { LAND_INFO, ETHIK_SOURCE } from '../../data/land-info.js';
+import { OPERATOR, HOSTER, LEGAL_STAND, LAW, missingLegal } from '../../data/legal.js';
 import { videoLinks, referenceLinks, CURRICULA, LEARNING_SOURCES } from '../../data/sources.js';
 import { store } from './store.js';
 import { search, highlight, escapeHtml } from './search.js';
@@ -228,7 +229,7 @@ function viewTopic(id, params) {
       const verified = c?.videos || [];
       return `<div class="prose" style="max-width:none">
         ${verified.length ? `<h2>Empfohlene Videos</h2><div class="linkgrid">${verified.map((v) => `
-          <div><div class="ytbox" data-yt="${v.yt}"><div><p>Beim Abspielen wird eine Verbindung zu YouTube (Google) hergestellt.</p><button class="btn" data-action="yt">Video laden</button></div></div><p class="label" style="margin-top:6px">${v.channel} · ${v.title}</p></div>`).join('')}</div>` : ''}
+          <div><div class="ytbox" data-yt="${v.yt}"><div><p>Beim Abspielen wird eine Verbindung zu YouTube (Google) hergestellt. <a href="#/datenschutz">Mehr dazu</a></p><button class="btn" data-action="yt">Video laden</button></div></div><p class="label" style="margin-top:6px">${v.channel} · ${v.title}</p></div>`).join('')}</div>` : ''}
         <h2>Erklärvideos auf etablierten Kanälen</h2>
         <p class="muted">Gezielte Suche nach „${t.title}“ auf Kanälen von Lehrkräften und öffentlich-rechtlichen Angeboten. Öffnet YouTube in einem neuen Tab.</p>
         <div class="linkgrid">${videoLinks(t, s, c?.videoQuery).map((v) => `
@@ -559,6 +560,71 @@ function viewSources() {
   </div>`;
 }
 
+// ───────────────────────── Impressum & Datenschutz ─────────────────────────
+// Angaben stehen in data/legal.js; fehlt etwas, steht oben ein Hinweis.
+const law = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label} ↗</a>`;
+const fill = (v, what) => v ? escapeHtml(v) : `<mark class="todo">[${what} fehlt]</mark>`;
+
+function legalWarning() {
+  const miss = missingLegal();
+  return miss.length ? `<div class="note"><strong>Entwurf</strong> Diese Seite ist noch nicht vollständig. In <code>data/legal.js</code> fehlen: ${miss.join(', ')}. Vor dem Livegang ausfüllen und rechtlich prüfen lassen.</div>` : '';
+}
+
+function operatorBlock() {
+  const o = OPERATOR;
+  return `<p>${fill(o.name, 'Name')}<br>${fill(o.street, 'Straße und Hausnummer')}<br>${fill(o.city, 'PLZ und Ort')}</p>
+    <p>E-Mail: ${o.email ? `<a href="mailto:${escapeHtml(o.email)}">${escapeHtml(o.email)}</a>` : fill(null, 'E-Mail')}${o.phone ? `<br>Telefon: ${escapeHtml(o.phone)}` : ''}</p>`;
+}
+
+function viewImprint() {
+  return pagehead({ crumbs: [['Impressum']], title: 'Impressum' }) + `
+  <div class="wrap" style="padding:36px var(--gutter) 72px"><div class="prose" style="max-width:68ch">
+    ${legalWarning()}
+    <h2>Angaben nach § 5 DDG</h2>
+    ${operatorBlock()}
+    <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+    <p>${OPERATOR.responsible ? escapeHtml(OPERATOR.responsible) : `${fill(OPERATOR.name, 'Name')}, Anschrift wie oben`}</p>
+    <h2>Haftung für Links</h2>
+    <p>Lernatlas verlinkt auf Angebote von Kultusministerien, Landesinstituten, Lernportalen und Videokanälen. Für deren Inhalte sind allein die jeweiligen Anbieter verantwortlich. Die Links werden regelmäßig geprüft. Wird uns ein Rechtsverstoß bekannt, entfernen wir den Link umgehend.</p>
+    <h2>Urheberrecht</h2>
+    <p>Lernzettel, Merkzettel und Übungen sind eigene Texte. Prüfungsaufgaben und fremde Werke werden nicht kopiert, sondern verlinkt. Die Schriften stehen unter der SIL Open Font License 1.1.</p>
+    <p class="muted">Rechtsgrundlage: ${law(LAW.ddg5, '§ 5 Digitale-Dienste-Gesetz')}. Stand: ${LEGAL_STAND}</p>
+  </div></div>`;
+}
+
+function viewPrivacy() {
+  const h = HOSTER;
+  return pagehead({ crumbs: [['Datenschutz']], title: 'Datenschutzerklärung', lead: 'Kurz gesagt: keine Konten, kein Tracking, keine Cookies. Dein Lernstand bleibt in deinem Browser.' }) + `
+  <div class="wrap" style="padding:36px var(--gutter) 72px">
+    <div class="layout2" style="padding:0">
+      <nav class="toc"><p class="label">Inhalt</p><a href="#d1" data-scroll>Verantwortlich</a><a href="#d2" data-scroll>Hosting</a><a href="#d3" data-scroll>Im Browser</a><a href="#d4" data-scroll>Videos</a><a href="#d5" data-scroll>Links</a><a href="#d6" data-scroll>Deine Rechte</a></nav>
+      <div class="prose" style="max-width:72ch">
+        ${legalWarning()}
+        <h2 id="d1">Verantwortlich</h2>
+        ${operatorBlock()}
+        <h2 id="d2">Hosting und Server-Logs</h2>
+        <p>Die Seite wird bei ${fill(h.name, 'Hosting-Anbieter')} gehostet. Beim Aufruf überträgt dein Browser technisch bedingt Daten an den Server: IP-Adresse, Datum und Uhrzeit, aufgerufene Datei, Referrer und Browser-Kennung. Der Anbieter verarbeitet sie, um die Seite auszuliefern und vor Angriffen zu schützen. Rechtsgrundlage ist unser berechtigtes Interesse an einem sicheren Betrieb (Art. 6 Abs. 1 lit. f DSGVO).${h.dpa ? ' Mit dem Anbieter besteht ein Vertrag zur Auftragsverarbeitung (Art. 28 DSGVO).' : ''}${h.privacyUrl ? ` Details: ${law(escapeHtml(h.privacyUrl), 'Datenschutzhinweise des Anbieters')}.` : ''}</p>
+        <p>Wir selbst werten keine Zugriffe aus und setzen keine Analyse- oder Werbedienste ein. Schriften und Skripte liegen auf unserem eigenen Server, es gibt keine Anfragen an Google Fonts oder andere CDNs.</p>
+        <h2 id="d3">Was in deinem Browser gespeichert wird</h2>
+        <p>Lernatlas setzt keine Cookies. Damit die Seite funktioniert, speichert sie im lokalen Speicher deines Browsers (localStorage): die gewählte Schulform und das Bundesland, Hell- oder Dunkelmodus, deinen Übungsfortschritt, den Stand deiner Karteikarten und deine Prüfungstermine. Außerdem legt ein Service Worker die Dateien der Seite im Browser-Cache ab, damit sie offline funktioniert.</p>
+        <p>Diese Daten verlassen dein Gerät nie, wir können sie nicht einsehen. Die Speicherung ist unbedingt erforderlich, um die von dir gewünschten Funktionen bereitzustellen, und braucht deshalb keine Einwilligung (${law(LAW.tdddg25, '§ 25 Abs. 2 Nr. 2 TDDDG')}).</p>
+        <p>Du kannst alles jederzeit löschen, über die Einstellungen deines Browsers oder direkt hier:</p>
+        <p><button class="btn btn--ghost" data-action="wipe">Alle Lernatlas-Daten in diesem Browser löschen</button></p>
+        <h2 id="d4">Eingebettete YouTube-Videos</h2>
+        <p>Videos werden erst geladen, wenn du auf „Video laden“ klickst. Vorher wird keine Verbindung zu YouTube hergestellt. Nach dem Klick lädt dein Browser den Player im erweiterten Datenschutzmodus von youtube-nocookie.com. Dabei erhält die Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland) mindestens deine IP-Adresse und die Information, welches Video du abspielst. YouTube kann dabei Daten in deinem Browser speichern und auslesen.</p>
+        <p>Rechtsgrundlage ist deine Einwilligung durch den Klick (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Sie gilt nur für dieses eine Video. Daten können auch an die Google LLC in den USA gehen. Google ist nach dem EU-US Data Privacy Framework zertifiziert (${law(LAW.dpf, 'Liste der zertifizierten Unternehmen')}). Mehr steht in der ${law(LAW.googlePrivacy, 'Datenschutzerklärung von Google')}.</p>
+        <p>Die Links „Videos zu …“ öffnen YouTube in einem neuen Tab. Dort gelten die Bedingungen von YouTube.</p>
+        <h2 id="d5">Externe Links</h2>
+        <p>Links auf Prüfungsarchive, Lehrpläne und Lernportale führen zu anderen Anbietern. Erst wenn du einen anklickst, verlässt du Lernatlas. Ab dann gelten die Datenschutzbestimmungen des jeweiligen Anbieters.</p>
+        <h2 id="d6">Deine Rechte</h2>
+        <p>Nach der ${law(LAW.dsgvo, 'DSGVO')} hast du das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Eine Einwilligung kannst du jederzeit für die Zukunft widerrufen (Art. 7 Abs. 3). Schreib dazu an die oben genannte Adresse.</p>
+        <p>Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO), zum Beispiel in deinem Bundesland: ${law(LAW.authorities, 'Anschriften der Aufsichtsbehörden')}.</p>
+        <p class="muted">Stand: ${LEGAL_STAND}</p>
+      </div>
+    </div>
+  </div>`;
+}
+
 function viewNotFound() {
   return pagehead({ title: 'Seite nicht gefunden', lead: 'Diese Seite gibt es nicht (mehr). <a href="#/">Zur Startseite</a> oder oben ein Thema suchen.' });
 }
@@ -588,6 +654,8 @@ function route() {
   else if (a === 'karten') { html = viewCards(b, params); title = 'Karteikarten · Lernatlas'; }
   else if (a === 'suche') { html = viewSearch(params); title = 'Suche · Lernatlas'; }
   else if (a === 'quellen') { html = viewSources(); title = 'Quellen · Lernatlas'; }
+  else if (a === 'impressum') { html = viewImprint(); title = 'Impressum · Lernatlas'; }
+  else if (a === 'datenschutz') { html = viewPrivacy(); title = 'Datenschutz · Lernatlas'; }
   else html = viewNotFound();
 
   main.innerHTML = html;
@@ -951,6 +1019,10 @@ document.addEventListener('click', (e) => {
   else if (!t.closest('.mainnav') || t.closest('.mainnav a')) setMenu(false);
   if (action === 'reset-practice') { const set = t.closest('[data-practice]')?.dataset.practice; if (set) { store.resetTopic(`uebung:${set}`); const y = window.scrollY; route(); window.scrollTo(0, y); } }
   if (action === 'reset') { const id = $('[data-topic]')?.dataset.topic; if (id) { store.resetTopic(id); route(); selectTab('uebungen'); } }
+  if (action === 'wipe' && confirm('Alle gespeicherten Daten von Lernatlas in diesem Browser löschen? Fortschritt, Karteikarten und Lernpläne gehen dabei verloren.')) {
+    const btn = t.closest('[data-action]');
+    store.wipe().then(() => btn.replaceWith(Object.assign(document.createElement('p'), { className: 'note', textContent: 'Gelöscht. Beim nächsten Aufruf legt die Seite nur den Offline-Speicher neu an, dein Lernstand beginnt von vorn.' })));
+  }
   if (action === 'yt') {
     const box = t.closest('[data-yt]');
     box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(box.dataset.yt)}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video"></iframe>`;

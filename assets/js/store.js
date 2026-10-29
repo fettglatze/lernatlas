@@ -18,6 +18,13 @@ function save() {
 }
 
 export const store = {
+  // Löscht alles, was Lernatlas im Browser gespeichert hat (Datenschutzseite).
+  async wipe() {
+    try { localStorage.removeItem(KEY); } catch { /* nichts gespeichert */ }
+    Object.assign(state, structuredClone(defaults));
+    if ('caches' in window) for (const k of await caches.keys()) if (k.startsWith('lernatlas-')) await caches.delete(k);
+    for (const r of (await navigator.serviceWorker?.getRegistrations()) || []) await r.unregister();
+  },
   get school() { return state.school; },
   get land() { return state.land; },
   get theme() { return state.theme; },
